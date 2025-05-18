@@ -5,6 +5,10 @@ import numpy as np
 import faiss
 import logging
 import torch
+import os # Added for path checking
+from dotenv import load_dotenv
+# Load environment variables from .env file if it exists
+load_dotenv()
 
 # Configure root logger
 logging.basicConfig(
@@ -32,6 +36,13 @@ DB_NAME = "JiraRepos"  # As per the dataset's mongodump
 COLLECTION_NAME = "Apache"  # Use your actual Jira collection (e.g., 'Apache' or 'JiraEcosystem')
 EMBEDDING_MODEL = 'intfloat/multilingual-e5-large-instruct'  # Example embedding model
 TASK_DESCRIPTION = "Given a new Jira ticket summary, retrieve relevant historical tickets for triage classification"
+
+FAISS_INDEX_FILE = "jira_index.faiss"
+INDEX_METADATA_FILE = "jira_index_metadata.json"
+INDEX_PROGRESS_FILE = "jira_index_progress.json" # Stores number of indexed items
+
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY") # Recommended: Load API key from environment variable
+
 # LLM_MODEL_LOCAL = "distilbert-base-uncased-finetuned-sst-2-english" # Example local model
 # OPENAI_API_KEY = "YOUR_OPENAI_API_KEY" # Replace with your key
 
@@ -48,15 +59,16 @@ def connect_to_db(uri, db_name):
         return None
 
 # --- 2. Load Jira Data ---
-def get_jira_issues(db, collection_name, batch_size=1000): # Added batch_size, removed limit
-    """Fetches Jira issues from the specified collection in batches and yields them."""
+def get_jira_issues(db, collection_name, batch_size=1000, initial_skip=0): # Added initial_skip
+    """Fetches Jira issues from the specified collection in batches and yields them, starting from initial_skip."""
     if not db:
         logger.error("Database connection not available for get_jira_issues.")
         return
 
     collection = db[collection_name]
-    skip = 0
+    skip = initial_skip # Start skipping from here
     total_fetched_this_run = 0
+    logger.info(f"Starting to fetch Jira issues from offset {initial_skip}.")
     while True:
         # Fetch a batch: project only the nested summary, description, and issuetype name
         # Materialize the cursor to a list to check its length and process
@@ -68,7 +80,7 @@ def get_jira_issues(db, collection_name, batch_size=1000): # Added batch_size, r
         raw_batch = list(raw_batch_cursor) # Convert cursor to list
 
         if not raw_batch:
-            logger.info(f"No more issues to fetch from {collection_name} after fetching a total of {total_fetched_this_run} issues in this run.")
+            logger.info(f"No more issues to fetch from {collection_name} (current skip: {skip}). Total fetched in this run (after initial_skip): {total_fetched_this_run} issues.")
             break # No more documents
 
         issues_batch = []
@@ -81,14 +93,14 @@ def get_jira_issues(db, collection_name, batch_size=1000): # Added batch_size, r
                 "issuetype": fld.get("issuetype", {}).get("name", "") # Extract issuetype name
             })
         
-        logger.info(f"Fetched batch of {len(issues_batch)} issues from {collection_name} (skip={skip}).")
+        logger.info(f"Fetched batch of {len(issues_batch)} issues from {collection_name} (current skip={skip}, initial_skip={initial_skip}).")
         total_fetched_this_run += len(issues_batch)
         yield issues_batch # Yield the processed batch
         
         skip += batch_size
         # Optimization: if last batch fetched was smaller than batch_size, it's the end of the collection
         if len(raw_batch) < batch_size:
-            logger.info(f"Last batch fetched ({len(raw_batch)}) was smaller than batch_size ({batch_size}). Assuming end of collection. Total fetched in this run: {total_fetched_this_run}.")
+            logger.info(f"Last batch fetched ({len(raw_batch)}) was smaller than batch_size ({batch_size}). Assuming end of collection. Total fetched in this run (after initial_skip): {total_fetched_this_run}.")
             break
 
 # --- 3. Generate Embeddings ---
@@ -119,15 +131,17 @@ def generate_embeddings(issues, model, model_name):
         embeddings_data.append({
             "issue_key": key,
             "text": text,  # Store original text
-            "embedding": emb.tolist() if hasattr(emb, 'tolist') else list(emb),
+            "embedding": emb.tolist() if hasattr(emb, 'tolist') else list(emb), # Storing as list for JSON
             "issuetype": issuetype_val # Store issuetype
         })
     logger.info(f"Generated {len(embeddings_data)} embeddings.")
     return embeddings_data
 
 # --- 4. Store Embeddings (Example: JSON file, consider a vector database for larger datasets) ---
+# This function is no longer primarily used for the main index embeddings, as they are processed in batches.
+# It can be kept for other purposes or removed if not needed.
 def store_embeddings(embeddings_data, filename="jira_embeddings.json"):
-    """Stores the generated embeddings to a JSON file."""
+    """Stores the given embeddings data to a JSON file."""
     try:
         with open(filename, 'w') as f:
             json.dump(embeddings_data, f, indent=4)
@@ -136,18 +150,22 @@ def store_embeddings(embeddings_data, filename="jira_embeddings.json"):
         logger.error(f"Error storing embeddings: {e}")
 
 def build_faiss_index(embeddings_data, dim, index_path="jira_index.faiss"):
-    """Builds a FAISS index of normalized embeddings and saves it."""
+    """Builds a FAISS index from all embeddings_data and saves it.
+    NOTE: This function processes all embeddings in memory. For large datasets,
+    use the batched indexing approach in the main script.
+    """
+    if not embeddings_data:
+        logger.error("No embeddings data provided to build_faiss_index.")
+        return None
     vectors = np.array([item['embedding'] for item in embeddings_data]).astype('float32')
-    # Embeddings are now normalized by SentenceTransformer, so no need for manual normalization here
-    # faiss.normalize_L2(vectors) 
-    index = faiss.IndexFlatIP(dim) # IndexFlatIP is for inner product, suitable for normalized vectors (cosine similarity)
+    index = faiss.IndexFlatIP(dim) 
     index.add(vectors)
     faiss.write_index(index, index_path)
-    logger.info(f"FAISS index built and saved to {index_path}")
+    logger.info(f"FAISS index with {index.ntotal} vectors built and saved to {index_path}")
     return index
 
 
-def search_faiss(query_text, model, index, embeddings_data, model_name_str, top_n=3):
+def search_faiss(query_text, model, index, index_metadata_list, model_name_str, top_n=3):
     """Searches the FAISS index for top_n similar issues to the query_text."""
     
     # model_name_str = model.config.name_or_path # Get model name from the loaded model instance - This was causing an error
@@ -169,28 +187,17 @@ def search_faiss(query_text, model, index, embeddings_data, model_name_str, top_
     distances, indices = index.search(q_emb, top_n)
     results = []
     for sim, idx in zip(distances[0], indices[0]):
-        item = embeddings_data[idx]
-        results.append({
-            'issue_key': item['issue_key'],
-            'similarity': float(sim),
-            'text': item['text'],
-            'issuetype': item.get('issuetype', '') # Include issuetype in results
-        })
+        if 0 <= idx < len(index_metadata_list): # Check index bounds
+            item = index_metadata_list[idx]
+            results.append({
+                'issue_key': item['issue_key'],
+                'similarity': float(sim),
+                'text': item['text'],
+                'issuetype': item.get('issuetype', '') 
+            })
+        else:
+            logger.warning(f"Invalid index {idx} from FAISS search results. Max index: {len(index_metadata_list)-1}")
     return results
-
-# --- 5. RAG System (Conceptual) ---
-# This section will depend on your choice of LLM (local or API)
-# and how you want to perform retrieval (e.g., cosine similarity with embeddings)
-
-# Example with a local LLM (conceptual)
-# def setup_local_llm(model_name):
-#     """Sets up a local LLM pipeline."""
-#     return pipeline("text-generation", model=model_name) # Or question-answering, etc.
-
-# Example with OpenAI API (conceptual)
-# def setup_openai_api(api_key):
-#     """Sets up OpenAI API."""
-#     openai.api_key = api_key
 
 def find_similar_issues(*args, **kwargs):
     """Deprecated stub; use search_faiss for similarity search via FAISS index."""
@@ -229,116 +236,204 @@ if __name__ == "__main__":
     db = connect_to_db(MONGO_URI, DB_NAME)
 
     if db:
-        # Load embeddings model only once
         logger.info(f"Loading embedding model: {EMBEDDING_MODEL} on {DEVICE}")
         embedding_model = SentenceTransformer(EMBEDDING_MODEL, device=DEVICE)
-        logger.info("Embedding model loaded.")
+        embedding_dim = embedding_model.get_sentence_embedding_dimension()
+        logger.info(f"Embedding model loaded. Dimension: {embedding_dim}")
  
-        # Configuration for batch processing from MongoDB
-        MONGO_BATCH_SIZE = 10000  # Adjust as needed for your system's memory and DB performance
+        MONGO_BATCH_SIZE = 100000  # Adjust as needed for your system's memory and DB performance
+                                 # Smaller for less RAM during embedding generation per batch
+                                 # Larger for fewer DB calls.
 
-        embeddings_file = "jira_embeddings.json" 
-        embeddings_data = [] # Initialize embeddings_data
+        faiss_index = None
+        index_metadata = []
+        num_indexed_previously = 0
+        faiss_res = None
 
-        try:
-            with open(embeddings_file, 'r') as f:
-                logger.info(f"Loading existing embeddings from {embeddings_file}")
-                embeddings_data_loaded = json.load(f)
-                # Basic check for 'issuetype' key in the first item if data exists
-                if embeddings_data_loaded and (not isinstance(embeddings_data_loaded, list) or not embeddings_data_loaded[0] or 'issuetype' not in embeddings_data_loaded[0]):
-                    logger.warning(f"Embeddings file {embeddings_file} might be in an old format or corrupted (missing 'issuetype' in first item). Regenerating embeddings.")
-                    raise FileNotFoundError # Force regeneration
-                embeddings_data = embeddings_data_loaded
-                logger.info(f"Successfully loaded {len(embeddings_data)} embeddings from file.")
-
-        except FileNotFoundError:
-            logger.info(f"No existing embeddings file found at {embeddings_file} or it's marked for regeneration. Generating new embeddings.")
-            
-            all_accumulated_embeddings_data = []
-            total_issues_processed_for_embedding = 0
-            
-            # get_jira_issues now returns a generator of batches
-            for issues_batch in get_jira_issues(db, COLLECTION_NAME, batch_size=MONGO_BATCH_SIZE):
-                if not issues_batch: # Should be handled by the generator's break condition, but as a safeguard
-                    logger.info("Received an empty batch, continuing if more batches are expected or stopping if generator finished.")
-                    continue
-
-                logger.info(f"Generating embeddings for a batch of {len(issues_batch)} issues. Total processed for embedding so far: {total_issues_processed_for_embedding}")
-                
-                # generate_embeddings processes the current batch
-                # Its internal batch_size=32 is for the SentenceTransformer model.encode, not MongoDB fetching
-                batch_embeddings_data = generate_embeddings(issues_batch, embedding_model, EMBEDDING_MODEL)
-                
-                if batch_embeddings_data:
-                    all_accumulated_embeddings_data.extend(batch_embeddings_data)
-                    # Count based on successfully generated embeddings for this batch
-                    total_issues_processed_for_embedding += len(batch_embeddings_data) 
-                else:
-                    # Log if a batch resulted in no embeddings, could indicate issues with input data for that batch
-                    logger.warning(f"generate_embeddings returned no data for a batch of {len(issues_batch)} issues. This batch will be skipped.")
-
-            embeddings_data = all_accumulated_embeddings_data # Assign accumulated data
-            
-            if embeddings_data:
-                logger.info(f"Total {len(embeddings_data)} embeddings generated. Storing them...")
-                store_embeddings(embeddings_data, embeddings_file)
-            else:
-                logger.error("No embeddings were generated after processing all batches. Please check data source and logs.")
-                # The script will proceed, but FAISS indexing will likely fail or be empty.
-
-        if embeddings_data: # Check if embeddings_data has content (either loaded or generated)
-            logger.info(f"Successfully loaded/generated {len(embeddings_data)} embeddings.")
-
-            # --- FAISS Integration for efficient similarity search ---
-            index_file = "jira_index.faiss"
+        if DEVICE == 'cuda':
             try:
-                index = faiss.read_index(index_file)
-                logger.info(f"Loaded existing FAISS index from {index_file}")
-            except Exception:
-                logger.info("Building FAISS index...")
-                index = build_faiss_index(embeddings_data, len(embeddings_data[0]['embedding']), index_file)
+                faiss_res = faiss.StandardGpuResources()
+                logger.info("FAISS GPU resources initialized.")
+            except Exception as e:
+                logger.error(f"Failed to initialize FAISS GPU resources: {e}. Falling back to CPU for FAISS.")
+                DEVICE_FAISS = 'cpu' # Fallback for FAISS specifically
+            else:
+                DEVICE_FAISS = 'cuda'
+        else:
+            DEVICE_FAISS = 'cpu'
+        logger.info(f"FAISS will use: {DEVICE_FAISS}")
 
-            # --- 5. RAG Example ---
-            # This is a placeholder for how you might use the embeddings.
-            # You'll need to integrate your chosen LLM here.
+
+        # Load progress if available
+        if os.path.exists(INDEX_PROGRESS_FILE):
+            try:
+                with open(INDEX_PROGRESS_FILE, 'r') as f:
+                    progress_data = json.load(f)
+                    num_indexed_previously = progress_data.get("num_indexed", 0)
+                logger.info(f"Loaded progress: {num_indexed_previously} items previously indexed.")
+
+                if num_indexed_previously > 0:
+                    if os.path.exists(INDEX_METADATA_FILE):
+                        with open(INDEX_METADATA_FILE, 'r') as f:
+                            index_metadata = json.load(f)
+                        logger.info(f"Loaded {len(index_metadata)} metadata entries.")
+                    else:
+                        logger.warning(f"Progress file exists but metadata file {INDEX_METADATA_FILE} not found. May need to re-index.")
+                        num_indexed_previously = 0 # Force re-index if metadata is missing
+
+                    if os.path.exists(FAISS_INDEX_FILE):
+                        logger.info(f"Loading existing FAISS index from {FAISS_INDEX_FILE}")
+                        faiss_index_cpu = faiss.read_index(FAISS_INDEX_FILE)
+                        if faiss_index_cpu.ntotal != num_indexed_previously or len(index_metadata) != num_indexed_previously:
+                            logger.warning(f"Index/metadata mismatch (Index: {faiss_index_cpu.ntotal}, Meta: {len(index_metadata)}, Progress: {num_indexed_previously}). Resetting and re-indexing.")
+                            num_indexed_previously = 0
+                            index_metadata = []
+                            faiss_index = None # Will be re-initialized
+                        else:
+                            if DEVICE_FAISS == 'cuda' and faiss_res:
+                                try:
+                                    faiss_index = faiss.index_cpu_to_gpu(faiss_res, 0, faiss_index_cpu)
+                                    logger.info("FAISS index moved to GPU.")
+                                except Exception as e:
+                                    logger.error(f"Failed to move FAISS index to GPU: {e}. Using CPU index.")
+                                    faiss_index = faiss_index_cpu
+                            else:
+                                faiss_index = faiss_index_cpu
+                            logger.info(f"Successfully loaded FAISS index with {faiss_index.ntotal} vectors.")
+                    else:
+                        logger.warning(f"Progress/metadata indicate existing index, but {FAISS_INDEX_FILE} not found. Resetting.")
+                        num_indexed_previously = 0
+                        index_metadata = []
+                        faiss_index = None
+            except Exception as e:
+                logger.error(f"Error loading progress/index: {e}. Starting fresh.")
+                num_indexed_previously = 0
+                index_metadata = []
+                faiss_index = None
+        
+        if faiss_index is None:
+            logger.info(f"Initializing new FAISS index (Dimension: {embedding_dim}).")
+            faiss_index_cpu = faiss.IndexFlatIP(embedding_dim)
+            if DEVICE_FAISS == 'cuda' and faiss_res:
+                try:
+                    faiss_index = faiss.index_cpu_to_gpu(faiss_res, 0, faiss_index_cpu)
+                    logger.info("New FAISS index created on GPU.")
+                except Exception as e:
+                    logger.error(f"Failed to create FAISS index on GPU: {e}. Using CPU index.")
+                    faiss_index = faiss_index_cpu # Fallback to CPU index object
+            else:
+                faiss_index = faiss_index_cpu # Use CPU index object
+            index_metadata = [] # Ensure metadata is also reset
+            num_indexed_previously = 0
+
+
+        # Main processing loop
+        logger.info(f"Starting/resuming Jira issue processing. Will skip the first {num_indexed_previously} issues from MongoDB.")
+        
+        # get_jira_issues now takes initial_skip
+        for issues_batch in get_jira_issues(db, COLLECTION_NAME, batch_size=MONGO_BATCH_SIZE, initial_skip=num_indexed_previously):
+            if not issues_batch:
+                logger.info("Received an empty batch or no more new issues to process.")
+                continue
+
+            logger.info(f"Processing batch of {len(issues_batch)} new issues for embedding and indexing.")
+            
+            # Generate embeddings for the current new batch
+            # generate_embeddings internal batch_size=32 is for SentenceTransformer model.encode
+            batch_embeddings_data = generate_embeddings(issues_batch, embedding_model, EMBEDDING_MODEL)
+            
+            if batch_embeddings_data:
+                vectors_list = [item['embedding'] for item in batch_embeddings_data]
+                current_batch_metadata = [
+                    {"issue_key": item["issue_key"], "text": item["text"], "issuetype": item["issuetype"]}
+                    for item in batch_embeddings_data
+                ]
+
+                if vectors_list:
+                    vectors_np = np.array(vectors_list).astype('float32')
+                    
+                    try:
+                        faiss_index.add(vectors_np)
+                        index_metadata.extend(current_batch_metadata)
+                        
+                        # Save progress
+                        current_total_indexed = faiss_index.ntotal
+                        
+                        # Save FAISS index (CPU version)
+                        if DEVICE_FAISS == 'cuda' and faiss_res and hasattr(faiss_index, 'is_GpuIndex') and faiss_index.is_GpuIndex(): # Check if it's actually a GPU index
+                            faiss_index_cpu_to_save = faiss.index_gpu_to_cpu(faiss_index)
+                            faiss.write_index(faiss_index_cpu_to_save, FAISS_INDEX_FILE)
+                        else:
+                            faiss.write_index(faiss_index, FAISS_INDEX_FILE)
+                        
+                        with open(INDEX_METADATA_FILE, 'w') as f:
+                            json.dump(index_metadata, f) # Overwrite with updated full list
+                        with open(INDEX_PROGRESS_FILE, 'w') as f:
+                            json.dump({"num_indexed": current_total_indexed}, f)
+                        
+                        logger.info(f"Successfully indexed batch. Total items in index: {current_total_indexed}. Progress saved.")
+                        num_indexed_previously = current_total_indexed # Update for next potential resume
+
+                    except Exception as e:
+                        logger.error(f"Error adding to FAISS index or saving: {e}")
+                        # Potentially break or implement more robust retry/rollback
+                        break 
+                else:
+                    logger.warning("No vectors extracted from batch_embeddings_data. Skipping FAISS add for this batch.")
+            else:
+                logger.warning(f"generate_embeddings returned no data for a batch of {len(issues_batch)} issues. This batch will be skipped.")
+
+        logger.info(f"Finished processing all available Jira issues. Final index size: {faiss_index.ntotal if faiss_index else 'N/A'}.")
+
+        if faiss_index and faiss_index.ntotal > 0 and index_metadata:
+            logger.info(f"FAISS index ready with {faiss_index.ntotal} items.")
 
             # Example: Find issues similar to a new ticket description
             new_ticket_summary = "timeout error when trying to access the API endpoint"
             logger.info(f"Finding similar issues for: '{new_ticket_summary}'")
             
-            # reuse the already loaded embedding_model for search
-            similar_issues = search_faiss(new_ticket_summary, embedding_model, index, embeddings_data, EMBEDDING_MODEL, top_n=3)
+            similar_issues = search_faiss(new_ticket_summary, embedding_model, faiss_index, index_metadata, EMBEDDING_MODEL, top_n=3)
 
-            logger.info("Top similar issues found via FAISS:")
-            for issue in similar_issues:
-                # Clean up snippet by removing any leading 'passage:' prefix
-                snippet = issue['text']
-                if isinstance(snippet, str) and snippet.lower().startswith('passage:'):
-                    snippet = snippet[len('passage:'):].strip()
-                logger.debug(
-                    f"Key: {issue['issue_key']} | Similarity: {issue['similarity']:.4f} | Text snippet: {snippet[:100]}..."
-                )
+            if similar_issues:
+                logger.info("Top similar issues found via FAISS:")
+                for issue in similar_issues:
+                    snippet = issue['text']
+                    if isinstance(snippet, str) and snippet.lower().startswith('passage:'):
+                        snippet = snippet[len('passage:'):].strip()
+                    logger.debug(
+                        f"Key: {issue['issue_key']} | Similarity: {issue['similarity']:.4f} | Text snippet: {snippet[:100]}..."
+                    )
 
-            # Generate a prompt for an LLM
-            rag_prompt = generate_rag_prompt(new_ticket_summary, similar_issues)
-            logger.debug("--- RAG Prompt for LLM ---")
-            logger.debug(rag_prompt)
-            logger.debug("--- End of RAG Prompt ---")
+                # Generate a prompt for an LLM
+                rag_prompt = generate_rag_prompt(new_ticket_summary, similar_issues)
+                logger.debug("--- RAG Prompt for LLM ---")
+                logger.debug(rag_prompt)
+                logger.debug("--- End of RAG Prompt ---")
 
-            import google.generativeai as genai
-              
-            try:
-                genai.configure(api_key="AIzaSyBbjIOvqYCUNEw5Of5BiIJZhGGnirBBMCc") # Replace with your actual key
-                model = genai.GenerativeModel('gemini-2.5-flash-preview-04-17') # Or 'gemini-1.5-flash', 'gemini-1.0-pro', etc.
-                response = model.generate_content(rag_prompt)
-                logger.info("\\nLLM (Gemini) Response:")
-                logger.info(response.text)
-            except Exception as e:
-                logger.error(f"Error with Gemini API: {e}")
-                logger.error("Please ensure you have the google-generativeai package installed (pip install google-generativeai)")
-                logger.error("And that your API key is correctly configured.")
+                # Assuming genai is already imported and configured as in the original snippet
+                import google.generativeai as genai
+                try:
+                    if not GEMINI_API_KEY:
+                        logger.error("GEMINI_API_KEY environment variable not set. Cannot use Gemini API.")
+                        raise ValueError("Gemini API key not configured.")
+                    
+                    genai.configure(api_key=GEMINI_API_KEY) 
+                    
+                    gemini_model_name = 'gemini-2.5-flash-preview-04-17' # Or your preferred Gemini model
+                    gemini_model = genai.GenerativeModel(gemini_model_name)
+                    response = gemini_model.generate_content(rag_prompt)
+                    logger.info("\\nLLM (Gemini) Response:")
+                    logger.info(response.text)
+                except Exception as e:
+                    logger.error(f"Error with Gemini API: {e}")
+                    logger.error("Please ensure you have the google-generativeai package installed (pip install google-generativeai)")
+                    logger.error("And that your GEMINI_API_KEY environment variable is correctly set.")
+            else:
+                logger.info("No similar issues found to generate RAG prompt.")
+        elif not (faiss_index and faiss_index.ntotal > 0):
+            logger.error("FAISS index is empty or not initialized. Cannot perform search or RAG. Please check data source and indexing process.")
+        else: # index_metadata is empty but index is not (should not happen with current logic)
+             logger.error("FAISS index metadata is empty, though index has items. This indicates an inconsistency. Cannot perform search effectively.")
 
-        else:
-            logger.error("Embeddings data is empty. Cannot proceed with FAISS index or RAG. Please check data source and embedding generation process.")
 
     logger.info("Script finished.")
