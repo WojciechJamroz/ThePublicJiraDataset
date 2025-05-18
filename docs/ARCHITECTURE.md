@@ -35,10 +35,39 @@ This document describes the high-level design and module breakdown of the Jira R
   - `query`: Search index and optionally generate/send RAG prompt to Google Gemini.
 - Supports verbose (`--debug`) logging via `src/utils/logging_config.py`.
 
-## Workflow
+### 8. Test Data Generation (`generate_real_testset.py`)
+- Fetches a subset of data from MongoDB for creating test/benchmark datasets.
+- Allows configuration of the number of records to fetch and skip.
+- Outputs data in JSONL format (`real_data_rag_testset.jsonl`).
 
-1. **Index**: Fetch issues → generate embeddings → add to FAISS → save index/metadata.
-2. **Query**: Load index/metadata → embed query → retrieve top-k issues → build prompt → (optional) call Gemini API.
+### 9. Benchmarking (`run_rag_benchmark.py`)
+- Runs the RAG pipeline on a predefined test set (e.g., `real_data_rag_testset.jsonl`).
+- Compares predicted issue types against expected types.
+- Generates various output files for analysis:
+  - `rag_benchmark_results.jsonl`: Detailed results per test case.
+  - `rag_benchmark_results.csv`: CSV version of the results.
+  - `rag_benchmark_prompts.jsonl`: Prompts used for LLM queries.
+  - `confusion_matrix.png`: Visual confusion matrix.
+- Prints summary statistics (overall accuracy, per-type accuracy, text-based confusion matrix).
+
+## Workflows
+
+### 1. Data Preparation (Optional)
+- Run `python generate_real_testset.py` to create `real_data_rag_testset.jsonl` from MongoDB for benchmarking or testing.
+
+### 2. Indexing
+- Execute `python main.py index`.
+- **Process**: Connect to MongoDB → Load/Initialize FAISS index & metadata → Fetch Jira issues in batches → Generate embeddings for issues → Add embeddings to FAISS index → Save updated index, metadata, and progress.
+
+### 3. Querying & RAG
+- Execute `python main.py query --text "<new_issue_summary>" [--rag]`.
+- **Process**: Load FAISS index & metadata → Load embedding model → Embed query text → Retrieve top-k similar issues from FAISS.
+- **If `--rag` is used**: Generate RAG prompt using query and retrieved issues → Send prompt to Gemini API (if configured) → Print LLM response.
+
+### 4. Benchmarking
+- Ensure `real_data_rag_testset.jsonl` exists (see Data Preparation).
+- Run `python run_rag_benchmark.py`.
+- **Process**: For each item in test set → Perform RAG-augmented querying → Extract predicted issuetype → Compare with expected issuetype → Aggregate results → Save detailed results (JSONL, CSV), prompts, and confusion matrix image.
 
 ## Dependencies
 
