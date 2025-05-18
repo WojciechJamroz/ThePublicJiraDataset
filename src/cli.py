@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys  # add for exit
 import numpy as np  # add numpy import
+from typing import Any
 from .utils.logging_config import configure_logging
 from .config import DEVICE, GEMINI_API_KEY, EMBEDDING_MODEL, GEMINI_MODEL_NAME
 from .db import connect_to_db, get_jira_issues
@@ -11,7 +12,7 @@ from .search import search_faiss
 from .prompt import generate_rag_prompt
 import google.generativeai as genai  # add Gemini API client
 
-def index_command(args):
+def index_command(args: Any) -> None:
     db = connect_to_db()
     if db is None:
         return
@@ -49,7 +50,7 @@ def index_command(args):
     logging.info("Indexing complete. Total items: %d", total_indexed)
 
 
-def query_command(args):
+def query_command(args: Any) -> None:
     # load index/metadata
     index, metadata = load_index_and_metadata(use_gpu=(DEVICE=='cuda'))
     if index is None or not metadata:
@@ -61,7 +62,7 @@ def query_command(args):
     results = search_faiss(args.text, model, index, metadata)
     print("Top similar issues:")
     for r in results:
-        print(f"{r['issue_key']} (score={r['similarity']:.4f}): {r['text']}")
+        print(f"{r['issue_key']} (score={r['similarity']:.4f}): {r['text']} ({r['issuetype']})")
 
     if args.rag:
         prompt = generate_rag_prompt(args.text, results)
@@ -81,7 +82,7 @@ def query_command(args):
             print("[Error] Could not get response from Gemini API.\nCheck your GEMINI_API_KEY and network connection.")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Jira RAG indexing and querying tool")
     parser.add_argument('--debug', action='store_true', help='Enable debug logging')
     args_pre, _ = parser.parse_known_args()

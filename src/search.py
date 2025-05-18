@@ -1,10 +1,17 @@
 import numpy as np
 import logging
+from typing import Any, List, Dict
 from .config import TASK_DESCRIPTION
 
 logger = logging.getLogger(__name__)
 
-def search_faiss(query, model, index, metadata, top_n=3):
+def search_faiss(
+    query: str,
+    model: Any,
+    index: Any,
+    metadata: List[Dict[str, Any]],
+    top_n: int = 3
+) -> List[Dict[str, Any]]:
     """Return top_n similar issues for query_text."""
     instr = f"Instruct: {TASK_DESCRIPTION}\nQuery: {query}"
 

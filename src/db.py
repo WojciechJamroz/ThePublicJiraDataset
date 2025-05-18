@@ -1,10 +1,12 @@
 import logging
+from typing import Optional, Generator, List, Dict, Any
 from pymongo import MongoClient
+from pymongo.database import Database
 from .config import MONGO_URI, DB_NAME, COLLECTION_NAME, MONGO_BATCH_SIZE
 
 logger = logging.getLogger(__name__)
 
-def connect_to_db():
+def connect_to_db() -> Optional[Database]:
     """Connect to MongoDB and return the database object."""
     try:
         client = MongoClient(MONGO_URI)
@@ -16,7 +18,11 @@ def connect_to_db():
         return None
 
 
-def get_jira_issues(db, initial_skip=0, batch_size=None):
+def get_jira_issues(
+    db: Optional[Database],
+    initial_skip: int = 0,
+    batch_size: Optional[int] = None
+    ) -> Generator[List[Dict[str, Any]], None, None]:
     """Yield batches of Jira issues starting from initial_skip."""
     if db is None:
         logger.error("No database connection available.")

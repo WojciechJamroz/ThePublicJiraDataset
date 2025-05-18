@@ -1,7 +1,8 @@
 from .config import TASK_DESCRIPTION
+from typing import List, Dict, Any
 
 
-def generate_rag_prompt(query_summary, similar):
+def generate_rag_prompt(query_summary: str, similar: List[Dict[str, Any]]) -> str:
     """Build an LLM prompt for classification."""
     p = [
         "Classify the following new Jira ticket by suggesting the most appropriate 'issuetype'.\n",

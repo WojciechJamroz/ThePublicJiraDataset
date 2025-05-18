@@ -1,11 +1,12 @@
 import logging
 import numpy as np
+from typing import Tuple, List, Dict, Any
 from sentence_transformers import SentenceTransformer
 from .config import EMBEDDING_MODEL
 
 logger = logging.getLogger(__name__)
 
-def load_embedding_model(device='cpu'):
+def load_embedding_model(device: str = 'cpu') -> Tuple[SentenceTransformer, int]:
     """Load and return a SentenceTransformer model on the specified device."""
     logger.info("Loading embedding model: %s on %s", EMBEDDING_MODEL, device)
     model = SentenceTransformer(EMBEDDING_MODEL, device=device)
@@ -14,7 +15,10 @@ def load_embedding_model(device='cpu'):
     return model, dim
 
 
-def generate_embeddings(issues, model, model_name=EMBEDDING_MODEL):
+def generate_embeddings(
+    issues: List[Dict[str, Any]],
+    model: SentenceTransformer,
+) -> List[Dict[str, Any]]:
     """Return a list of dicts with issue_key, text, embedding (np.ndarray), issuetype."""
     raw_texts = [f"{i.get('summary','')} {i.get('description','')}" for i in issues]
     keys = [i.get('key') for i in issues]

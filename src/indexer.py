@@ -1,12 +1,13 @@
 import os
 import json
 import logging
+from typing import Any, List, Tuple, Optional
 import faiss
 from .config import FAISS_INDEX_FILE, INDEX_METADATA_FILE, INDEX_PROGRESS_FILE
 
 logger = logging.getLogger(__name__)
 
-def init_faiss_index(dim, use_gpu=False):
+def init_faiss_index(dim: int, use_gpu: bool = False) -> Any:
     """Initialize CPU or GPU FAISS index for inner-product similarity."""
     cpu_index = faiss.IndexFlatIP(dim)
     if use_gpu:
@@ -22,7 +23,7 @@ def init_faiss_index(dim, use_gpu=False):
     return cpu_index
 
 
-def save_index_and_metadata(index, metadata):
+def save_index_and_metadata(index: Any, metadata: List[dict]) -> None:
     """Persist FAISS index and metadata to disk."""
     # write FAISS (ensure CPU index)
     if hasattr(index, 'is_GpuIndex') and index.is_GpuIndex():
@@ -36,7 +37,7 @@ def save_index_and_metadata(index, metadata):
     logger.info("Saved FAISS index and %d metadata entries.", len(metadata))
 
 
-def load_index_and_metadata(use_gpu=False):
+def load_index_and_metadata(use_gpu: bool = False) -> Tuple[Optional[Any], List[dict]]:
     """Load index and metadata from disk; return (index or None, metadata list)."""
     if not os.path.exists(INDEX_PROGRESS_FILE):
         logger.info("No progress file; skipping load.")
@@ -77,7 +78,7 @@ def load_index_and_metadata(use_gpu=False):
     return idx_cpu, metadata
 
 
-def update_progress(num_indexed):
+def update_progress(num_indexed: int) -> None:
     """Write progress JSON file."""
     with open(INDEX_PROGRESS_FILE, 'w') as f:
         json.dump({'num_indexed': num_indexed}, f)
