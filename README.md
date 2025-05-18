@@ -11,6 +11,7 @@ This project provides:
 - **FAISS indexing**: Fast similarity search (CPU/GPU).
 - **CLI**: Simple `index` and `query` commands.
 - **RAG prompts**: Generate context-rich prompts for LLMs like Google Gemini.
+- **Benchmarking**: Evaluate RAG pipeline performance with detailed results and visualizations (e.g., confusion matrix).
 
 ## Getting Started
 
@@ -18,7 +19,9 @@ See the detailed documentation in the `docs/` folder:
 
 - [Installation](docs/INSTALL.md)
 - [Usage](docs/USAGE.md)
+- [Benchmarking](docs/BENCHMARKING.md)
 - [Architecture](docs/ARCHITECTURE.md)
+- [Dataset Information](docs/DATASET.md)
 - [Contributing](docs/CONTRIBUTING.md)
 
 ## License
