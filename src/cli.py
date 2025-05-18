@@ -58,7 +58,7 @@ def query_command(args):
 
     # load model
     model, _ = load_embedding_model(device=DEVICE)
-    results = search_faiss(args.text, model, index, metadata, model_name=EMBEDDING_MODEL)
+    results = search_faiss(args.text, model, index, metadata)
     print("Top similar issues:")
     for r in results:
         print(f"{r['issue_key']} (score={r['similarity']:.4f}): {r['text']}")

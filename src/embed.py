@@ -19,18 +19,9 @@ def generate_embeddings(issues, model, model_name=EMBEDDING_MODEL):
     raw_texts = [f"{i.get('summary','')} {i.get('description','')}" for i in issues]
     keys = [i.get('key') for i in issues]
     issuetypes = [i.get('issuetype','') for i in issues]
-
-    # prefix if needed
-    if '-instruct' in model_name.lower():
-        texts = raw_texts
-        logger.debug("Instruct model: embedding raw texts.")
-    else:
-        texts = [f"passage: {t}" for t in raw_texts]
-        logger.debug("Base model: prepending 'passage:' to texts.")
-
     try:
         embeddings = model.encode(
-            texts, batch_size=256, convert_to_tensor=False, normalize_embeddings=True
+            raw_texts, batch_size=256, convert_to_tensor=False, normalize_embeddings=True
         )
     except Exception as e:
         logger.error("Embedding generation failed: %s", e)
