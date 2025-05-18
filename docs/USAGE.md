@@ -24,25 +24,55 @@ You can configure the number of records to fetch and skip within the script by m
 
 ## Indexing Jira Data
 
-To index your Jira data, use the `index_data.py` script. This will read data from your MongoDB instance and create the necessary indexes for efficient querying.
-
-Run the script as follows:
+To build or update the FAISS index with your Jira data from MongoDB, use the `index` command:
 
 ```bash
-python index_data.py
+python main.py index
 ```
 
-## Querying Jira Data
+This command will:
+- Connect to your MongoDB instance.
+- Load the sentence transformer model.
+- Load an existing FAISS index and metadata if found, or create a new one.
+- Fetch Jira issues in batches (continuing from where it left off if an existing index is loaded).
+- Generate embeddings for the fetched issues.
+- Add the embeddings to the FAISS index.
+- Save the updated index and metadata (`jira_index.faiss` and `jira_index_metadata.json`).
+- Keep track of progress in `jira_index_progress.json`.
 
-Once your data is indexed, you can query it using the `query_data.py` script. This script allows you to perform various queries on your indexed Jira data.
+## Querying Similar Issues
 
-Example usage:
+Once your data is indexed, you can find similar historical issues for a new ticket summary using the `query` command:
 
 ```bash
-python query_data.py --query "your_query_here"
+python main.py query --text "Your new ticket summary here"
 ```
 
-Refer to the script's help message for more query options.
+This will output a list of the most similar issues found in the index, along with their similarity scores.
+
+### RAG-Augmented Querying
+
+To also generate a prompt for a Large Language Model (LLM) like Google Gemini, which includes the context of these similar issues, add the `--rag` flag:
+
+```bash
+python main.py query --text "Your new ticket summary here" --rag
+```
+
+This will:
+1.  Perform the similarity search.
+2.  Print the top similar issues.
+3.  Generate a RAG prompt incorporating the new ticket summary and the retrieved similar issues.
+4.  Print the generated prompt.
+5.  If `GEMINI_API_KEY` is configured, it will send the prompt to the Gemini API and print the LLM's response.
+
+### Debug Mode
+
+You can enable debug logging for more verbose output by adding the `--debug` flag before the command:
+
+```bash
+python main.py --debug index
+python main.py --debug query --text "Your new ticket summary here"
+```
 
 ## Troubleshooting
 
