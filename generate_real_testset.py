@@ -7,7 +7,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 OUTPUT_FILE = "real_data_rag_testset.jsonl"
-NUM_RECORDS_TO_FETCH = 50
+NUM_RECORDS_TO_FETCH = 1000
 SKIP_RECORDS = 900000
 
 def fetch_data_from_mongodb():
