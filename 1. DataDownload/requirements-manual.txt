@@ -1,0 +1,11 @@
+
+# JupyterLab Notebooks
+jupyterlab==3.2.5
+
+# JupyterLab extensions
+jupyterlab-execute-time==2.1.0  # Display cell execution time
+lckr-jupyterlab-variableinspector==3.0.9  # Inspect variables
+jupyterlab-system-monitor==0.8.0  # View CPU and RAM usage
+
+# Database
+pymongo==3.11.3

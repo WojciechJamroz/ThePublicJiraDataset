@@ -1,0 +1,106 @@
+{"link types":{
+  "Backports": "Backport", 
+           
+    "Blocked": "Block",
+    "Blocker": "Block",
+    "Blocks": "Block",
+           
+    "Bonfire Testing": "Bonfire Testing", 
+    "Bonfire testing": "Bonfire Testing", 
+    "Git Code Review": "Bonfire Testing", 
+    "Testing": "Bonfire Testing",
+           
+    "Causality": "Cause", 
+    "Cause": "Cause",
+    "Caused": "Cause", 
+    "Problem/Incident": "Cause",
+           
+    "Child-Issue": "Parent-Child", 
+    "Parent Feature": "Parent-Child",
+    "Parent/Child": "Parent-Child",
+    "multi-level hierarchy [GANTT]": "Parent-Child",
+    "Parent-Relation": "Parent-Child",
+           
+    "Cloners": "Clone", 
+    "Cloners (old)": "Clone", 
+           
+    "Collection": "Incorporate", 
+    "Container": "Incorporate",
+    "Contains(WBSGantt)": "Incorporate", 
+    "Incorporate": "Incorporate", 
+    "Incorporates": "Incorporate", 
+    "Part": "Incorporate",
+    "PartOf": "Incorporate",
+    "Superset": "Incorporate", 
+           
+    "Completes": "Fix", 
+    "Fixes": "Fix",
+    "Resolve": "Fix",
+           
+    "Depend": "Depend", 
+    "Dependency": "Depend", 
+    "Dependent": "Depend", 
+    "Depends": "Depend", 
+    "Gantt Dependency": "Depend",
+    "dependent": "Depend",
+           
+    "Derived": "Derive",
+           
+    "Detail": "Detail", 
+           
+    "Documentation": "Documented",
+    "Documented": "Documented",
+    
+    "Duplicate": "Duplicate",
+           
+    "Epic": "Epic", 
+    "Epic-Relation": "Epic",
+    
+    "Finish-to-Finish link (WBSGantt)": "finish-finish", 
+    "Gantt End to End": "finish-finish", 
+    "Gantt: finish-finish": "finish-finish",
+    "finish-finish [GANTT]": "finish-finish", 
+    
+    "Gantt End to Start": "finish-start", 
+    "Gantt: finish-start": "finish-start",
+    "finish-start [GANTT]": "finish-start",
+
+    "Gantt Start to Start": "start-start", 
+    
+    "Gantt: start-finish": "start-finish",
+    
+    "Follows": "Follow", 
+    "Sequence": "Follow", 
+    
+    "Implement": "Implement", 
+    "Implements": "Implement", 
+    
+    "Issue split": "Split",
+    "Split": "Split",
+    "Work Breakdown": "Split",
+    
+    "Preceded By": "Precede", 
+    
+    "Reference": "Relate",
+    "Relate": "Relate",
+    "Related": "Relate", 
+    "Relates": "Relate",
+    "Relationship": "Relate",
+    
+    "Regression": "Breaks",
+    
+    "Replacement": "Replace",
+    
+    "Required": "Require",
+    
+    "Supercedes": "Supercede",
+    "Supersede": "Supercede",
+    "Supersession": "Supercede", 
+    
+    "Test": "Test", 
+    "Tested": "Test",
+    
+    "Trigger": "Trigger",
+          
+    "Subtask": "Subtask"}
+}

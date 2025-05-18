@@ -1,0 +1,4 @@
+jira_embeddings.json
+jira_index.faiss
+.venv/
+.vscode/

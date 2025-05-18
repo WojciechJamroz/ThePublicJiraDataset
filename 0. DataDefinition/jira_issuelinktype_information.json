@@ -1,0 +1,1334 @@
+{
+    "Apache": {
+        "Blocked": {
+            "id": "12310361",
+            "name": "Blocked",
+            "inward": "Blocked",
+            "outward": "Blocked",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310361"
+        },
+        "Blocker": {
+            "id": "10032",
+            "name": "Blocker",
+            "inward": "is blocked by",
+            "outward": "blocks",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/10032"
+        },
+        "Child-Issue": {
+            "id": "12310460",
+            "name": "Child-Issue",
+            "inward": "is a child of",
+            "outward": "is a parent of",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310460"
+        },
+        "Cloners": {
+            "id": "10020",
+            "name": "Cloners",
+            "inward": "is cloned by",
+            "outward": "is a clone of",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/10020"
+        },
+        "Completes": {
+            "id": "12310660",
+            "name": "Completes",
+            "inward": "is fixed by",
+            "outward": "fixes",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310660"
+        },
+        "Container": {
+            "id": "12310060",
+            "name": "Container",
+            "inward": "Is contained by",
+            "outward": "contains",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310060"
+        },
+        "Dependency": {
+            "id": "12310461",
+            "name": "Dependency",
+            "inward": "Dependency",
+            "outward": "Dependency",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310461"
+        },
+        "Dependent": {
+            "id": "12310360",
+            "name": "Dependent",
+            "inward": "Dependent",
+            "outward": "Dependent",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310360"
+        },
+        "Duplicate": {
+            "id": "12310000",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310000"
+        },
+        "Incorporates": {
+            "id": "12310010",
+            "name": "Incorporates",
+            "inward": "is part of",
+            "outward": "incorporates",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310010"
+        },
+        "Issue split": {
+            "id": "12310761",
+            "name": "Issue split",
+            "inward": "split from",
+            "outward": "split to",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310761"
+        },
+        "Parent Feature": {
+            "id": "12310462",
+            "name": "Parent Feature",
+            "inward": "Parent Feature",
+            "outward": "Parent Feature",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310462"
+        },
+        "Problem/Incident": {
+            "id": "12310560",
+            "name": "Problem/Incident",
+            "inward": "is caused by",
+            "outward": "causes",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310560"
+        },
+        "Reference": {
+            "id": "10030",
+            "name": "Reference",
+            "inward": "is related to",
+            "outward": "relates to",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/10030"
+        },
+        "Regression": {
+            "id": "12310050",
+            "name": "Regression",
+            "inward": "is broken by",
+            "outward": "breaks",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310050"
+        },
+        "Related": {
+            "id": "12310260",
+            "name": "Related",
+            "inward": "is related to",
+            "outward": "relates to",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310260"
+        },
+        "Required": {
+            "id": "12310040",
+            "name": "Required",
+            "inward": "is required by",
+            "outward": "requires",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310040"
+        },
+        "Supercedes": {
+            "id": "12310051",
+            "name": "Supercedes",
+            "inward": "is superceded by",
+            "outward": "supercedes",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310051"
+        },
+        "Testing": {
+            "id": "12310760",
+            "name": "Testing",
+            "inward": "Discovered while testing",
+            "outward": "Testing discovered",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310760"
+        },
+        "dependent": {
+            "id": "10001",
+            "name": "dependent",
+            "inward": "is depended upon by",
+            "outward": "depends upon",
+            "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/10001"
+        }
+    },
+    "Hyperledger": {
+        "Blocks": {
+            "id": "10000",
+            "name": "Blocks",
+            "inward": "is blocked by",
+            "outward": "blocks",
+            "self": "https://jira.hyperledger.org/rest/api/2/issueLinkType/10000"
+        },
+        "Cloners": {
+            "id": "10001",
+            "name": "Cloners",
+            "inward": "is cloned by",
+            "outward": "clones",
+            "self": "https://jira.hyperledger.org/rest/api/2/issueLinkType/10001"
+        },
+        "Duplicate": {
+            "id": "10002",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://jira.hyperledger.org/rest/api/2/issueLinkType/10002"
+        },
+        "Git Code Review": {
+            "id": "10300",
+            "name": "Git Code Review",
+            "inward": "opened during git code review in",
+            "outward": "git code review opened",
+            "self": "https://jira.hyperledger.org/rest/api/2/issueLinkType/10300"
+        },
+        "Issue split": {
+            "id": "10400",
+            "name": "Issue split",
+            "inward": "split from",
+            "outward": "split to",
+            "self": "https://jira.hyperledger.org/rest/api/2/issueLinkType/10400"
+        },
+        "Relates": {
+            "id": "10003",
+            "name": "Relates",
+            "inward": "relates to",
+            "outward": "relates to",
+            "self": "https://jira.hyperledger.org/rest/api/2/issueLinkType/10003"
+        }
+    },
+    "IntelDAOS": {
+        "Blocker": {
+            "id": "10007",
+            "name": "Blocker",
+            "inward": "is blocked by",
+            "outward": "is blocking",
+            "self": "https://daosio.atlassian.net/rest/api/2/issueLinkType/10007"
+        },
+        "Blocks": {
+            "id": "10000",
+            "name": "Blocks",
+            "inward": "is blocked by",
+            "outward": "blocks",
+            "self": "https://daosio.atlassian.net/rest/api/2/issueLinkType/10000"
+        },
+        "Cloners": {
+            "id": "10001",
+            "name": "Cloners",
+            "inward": "is cloned by",
+            "outward": "clones",
+            "self": "https://daosio.atlassian.net/rest/api/2/issueLinkType/10001"
+        },
+        "Cloners (migrated)": {
+            "id": "10010",
+            "name": "Cloners (migrated)",
+            "inward": "is cloned by",
+            "outward": "Clones",
+            "self": "https://daosio.atlassian.net/rest/api/2/issueLinkType/10010"
+        },
+        "Duplicate": {
+            "id": "10002",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://daosio.atlassian.net/rest/api/2/issueLinkType/10002"
+        },
+        "Gantt End to End": {
+            "id": "10013",
+            "name": "Gantt End to End",
+            "inward": "has to be finished together with",
+            "outward": "has to be finished together with",
+            "self": "https://daosio.atlassian.net/rest/api/2/issueLinkType/10013"
+        },
+        "Gantt End to Start": {
+            "id": "10009",
+            "name": "Gantt End to Start",
+            "inward": "has to be done after",
+            "outward": "has to be done before",
+            "self": "https://daosio.atlassian.net/rest/api/2/issueLinkType/10009"
+        },
+        "Gantt Start to Start": {
+            "id": "10008",
+            "name": "Gantt Start to Start",
+            "inward": "has to be started together with",
+            "outward": "has to be started together with",
+            "self": "https://daosio.atlassian.net/rest/api/2/issueLinkType/10008"
+        },
+        "Implement": {
+            "id": "10011",
+            "name": "Implement",
+            "inward": "is implemented by",
+            "outward": "implements",
+            "self": "https://daosio.atlassian.net/rest/api/2/issueLinkType/10011"
+        },
+        "Related": {
+            "id": "10006",
+            "name": "Related",
+            "inward": "is related to",
+            "outward": "is related to ",
+            "self": "https://daosio.atlassian.net/rest/api/2/issueLinkType/10006"
+        },
+        "Relates": {
+            "id": "10003",
+            "name": "Relates",
+            "inward": "relates to",
+            "outward": "relates to",
+            "self": "https://daosio.atlassian.net/rest/api/2/issueLinkType/10003"
+        },
+        "Verify": {
+            "id": "10012",
+            "name": "Verify",
+            "inward": "is verified by",
+            "outward": "verifies",
+            "self": "https://daosio.atlassian.net/rest/api/2/issueLinkType/10012"
+        }
+    },
+    "JFrog": {
+        "Cloners": {
+            "id": "10440",
+            "name": "Cloners",
+            "inward": "is cloned by",
+            "outward": "clones",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10440"
+        },
+        "Contains(WBSGantt)": {
+            "id": "10145",
+            "name": "Contains(WBSGantt)",
+            "inward": "is contained in",
+            "outward": "contains",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10145"
+        },
+        "Defect": {
+            "id": "10541",
+            "name": "Defect",
+            "inward": "created by",
+            "outward": "created",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10541"
+        },
+        "Dependency": {
+            "id": "10010",
+            "name": "Dependency",
+            "inward": "is a precondition for",
+            "outward": "depends on",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10010"
+        },
+        "Duplicate": {
+            "id": "10011",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10011"
+        },
+        "Finish-to-Finish link (WBSGantt)": {
+            "id": "10143",
+            "name": "Finish-to-Finish link (WBSGantt)",
+            "inward": "can't finish until the linked issue is done.",
+            "outward": "Linked one can't finish until this issue is done.",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10143"
+        },
+        "Finish-to-Start link (WBSGantt)": {
+            "id": "10142",
+            "name": "Finish-to-Start link (WBSGantt)",
+            "inward": "can't start until the linked issue is done.",
+            "outward": "Linked one can't start until this issue is done.",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10142"
+        },
+        "Gantt End to End": {
+            "id": "10242",
+            "name": "Gantt End to End",
+            "inward": "has to be finished together with",
+            "outward": "has to be finished together with",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10242"
+        },
+        "Gantt End to Start": {
+            "id": "10240",
+            "name": "Gantt End to Start",
+            "inward": "has to be done after",
+            "outward": "has to be done before",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10240"
+        },
+        "Gantt Start to End": {
+            "id": "10243",
+            "name": "Gantt Start to End",
+            "inward": "start is earliest end of",
+            "outward": "earliest end is start of",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10243"
+        },
+        "Gantt Start to Start": {
+            "id": "10241",
+            "name": "Gantt Start to Start",
+            "inward": "has to be started together with",
+            "outward": "has to be started together with",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10241"
+        },
+        "Issue split": {
+            "id": "10340",
+            "name": "Issue split",
+            "inward": "split from",
+            "outward": "split to",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10340"
+        },
+        "Relationship": {
+            "id": "10030",
+            "name": "Relationship",
+            "inward": "is related to",
+            "outward": "relates to",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10030"
+        },
+        "Start-to-Finish link (WBSGantt)": {
+            "id": "10141",
+            "name": "Start-to-Finish link (WBSGantt)",
+            "inward": "can't finish until the linked issue begins.",
+            "outward": "Linked one can't finish until this issue begins.",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10141"
+        },
+        "Start-to-Start link (WBSGantt)": {
+            "id": "10140",
+            "name": "Start-to-Start link (WBSGantt)",
+            "inward": "can't start until the linked issue starts.",
+            "outward": "Linked one can't start until this issue starts.",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10140"
+        },
+        "Tests": {
+            "id": "10540",
+            "name": "Tests",
+            "inward": "tested by",
+            "outward": "tests",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10540"
+        },
+        "Trigger": {
+            "id": "10020",
+            "name": "Trigger",
+            "inward": "was triggered by",
+            "outward": "triggered",
+            "self": "https://www.jfrog.com/jira/rest/api/2/issueLinkType/10020"
+        }
+    },
+    "Jira": {
+        "Blocker": {
+            "id": "10020",
+            "name": "Blocker",
+            "inward": "is blocked by",
+            "outward": "blocks",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10020"
+        },
+        "Bonfire Testing": {
+            "id": "10200",
+            "name": "Bonfire Testing",
+            "inward": "Testing discovered",
+            "outward": "Discovered while testing",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10200"
+        },
+        "Cause": {
+            "id": "10050",
+            "name": "Cause",
+            "inward": "causes",
+            "outward": "is caused by",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10050"
+        },
+        "Cloners": {
+            "id": "10030",
+            "name": "Cloners",
+            "inward": "was cloned as",
+            "outward": "is cloned from",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10030"
+        },
+        "Depends": {
+            "id": "10500",
+            "name": "Depends",
+            "inward": "depended on by",
+            "outward": "depends on",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10500"
+        },
+        "Derived": {
+            "id": "10091",
+            "name": "Derived",
+            "inward": "has a derivative of",
+            "outward": "derived from",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10091"
+        },
+        "Detail": {
+            "id": "10080",
+            "name": "Detail",
+            "inward": "is detailed by",
+            "outward": "details",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10080"
+        },
+        "Duplicate": {
+            "id": "10001",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10001"
+        },
+        "Follows": {
+            "id": "10501",
+            "name": "Follows",
+            "inward": "followed by",
+            "outward": "follows",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10501"
+        },
+        "Issue split": {
+            "id": "10900",
+            "name": "Issue split",
+            "inward": "split from",
+            "outward": "split to",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10900"
+        },
+        "Part": {
+            "id": "10010",
+            "name": "Part",
+            "inward": "is incorporated by",
+            "outward": "incorporates",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10010"
+        },
+        "Problem/Incident": {
+            "id": "10700",
+            "name": "Problem/Incident",
+            "inward": "is caused by",
+            "outward": "causes",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10700"
+        },
+        "Reference": {
+            "id": "10000",
+            "name": "Reference",
+            "inward": "is related to",
+            "outward": "relates to",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10000"
+        },
+        "Regression": {
+            "id": "10060",
+            "name": "Regression",
+            "inward": "has a regression in",
+            "outward": "is a regression of",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10060"
+        },
+        "Relate": {
+            "id": "10300",
+            "name": "Relate",
+            "inward": "is related to",
+            "outward": "relates to",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10300"
+        },
+        "Related": {
+            "id": "10082",
+            "name": "Related",
+            "inward": "is related to",
+            "outward": "relates to",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10082"
+        },
+        "Resolve": {
+            "id": "10600",
+            "name": "Resolve",
+            "inward": "is resolved by",
+            "outward": "resolves",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10600"
+        },
+        "Split": {
+            "id": "10301",
+            "name": "Split",
+            "inward": "was split into",
+            "outward": "was split from",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10301"
+        },
+        "Supersession": {
+            "id": "10070",
+            "name": "Supersession",
+            "inward": "supersedes",
+            "outward": "is superseded by",
+            "self": "https://jira.atlassian.com/rest/api/2/issueLinkType/10070"
+        }
+    },
+    "JiraEcosystem": {
+        "Blocker": {
+            "id": "10030",
+            "name": "Blocker",
+            "inward": "is blocked by",
+            "outward": "blocks",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10030"
+        },
+        "Blocks": {
+            "id": "10803",
+            "name": "Blocks",
+            "inward": "is blocked by",
+            "outward": "blocks",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10803"
+        },
+        "Bonfire testing": {
+            "id": "10570",
+            "name": "Bonfire testing",
+            "inward": "Testing discovered",
+            "outward": "Discovered while testing",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10570"
+        },
+        "Bonfire Testing": {
+            "id": "10070",
+            "name": "Bonfire Testing",
+            "inward": "Testing discovered",
+            "outward": "Discovered while testing",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10070"
+        },
+        "Cause": {
+            "id": "10040",
+            "name": "Cause",
+            "inward": "is caused by",
+            "outward": "causes",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10040"
+        },
+        "Cloners": {
+            "id": "10041",
+            "name": "Cloners",
+            "inward": "cloned by",
+            "outward": "clones",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10041"
+        },
+        "Depends": {
+            "id": "10170",
+            "name": "Depends",
+            "inward": "is depended on by",
+            "outward": "depends on",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10170"
+        },
+        "Duplicate": {
+            "id": "10010",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10010"
+        },
+        "Epic": {
+            "id": "10370",
+            "name": "Epic",
+            "inward": "is the epic for",
+            "outward": "belongs to epic",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10370"
+        },
+        "Follows": {
+            "id": "10470",
+            "name": "Follows",
+            "inward": "Followed up by",
+            "outward": "Follow up to",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10470"
+        },
+        "Issue split": {
+            "id": "10700",
+            "name": "Issue split",
+            "inward": "split from",
+            "outward": "split to",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10700"
+        },
+        "Part": {
+            "id": "10050",
+            "name": "Part",
+            "inward": "is incorporated by",
+            "outward": "incorporates",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10050"
+        },
+        "Polaris datapoint issue link": {
+            "id": "10806",
+            "name": "Polaris datapoint issue link",
+            "inward": "added to idea",
+            "outward": "is idea for",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10806"
+        },
+        "Polaris issue link": {
+            "id": "10804",
+            "name": "Polaris issue link",
+            "inward": "is implemented by",
+            "outward": "implements",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10804"
+        },
+        "Polaris merge issue link": {
+            "id": "10805",
+            "name": "Polaris merge issue link",
+            "inward": "merged into",
+            "outward": "merged from",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10805"
+        },
+        "Preceded By": {
+            "id": "10670",
+            "name": "Preceded By",
+            "inward": "Preceded By",
+            "outward": "Precedes",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10670"
+        },
+        "Reference": {
+            "id": "10042",
+            "name": "Reference",
+            "inward": "is referenced by",
+            "outward": "references",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10042"
+        },
+        "Relate": {
+            "id": "10000",
+            "name": "Relate",
+            "inward": "is related to",
+            "outward": "relates to",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10000"
+        },
+        "Split": {
+            "id": "10060",
+            "name": "Split",
+            "inward": "was split into",
+            "outward": "was split from",
+            "self": "https://ecosystem.atlassian.net/rest/api/2/issueLinkType/10060"
+        }
+    },
+    "MariaDB": {
+        "Blocks": {
+            "id": "10000",
+            "name": "Blocks",
+            "inward": "is blocked by",
+            "outward": "blocks",
+            "self": "https://jira.mariadb.org/rest/api/2/issueLinkType/10000"
+        },
+        "Duplicate": {
+            "id": "10002",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://jira.mariadb.org/rest/api/2/issueLinkType/10002"
+        },
+        "Issue split": {
+            "id": "10700",
+            "name": "Issue split",
+            "inward": "split from",
+            "outward": "split to",
+            "self": "https://jira.mariadb.org/rest/api/2/issueLinkType/10700"
+        },
+        "PartOf": {
+            "id": "10100",
+            "name": "PartOf",
+            "inward": "is part of",
+            "outward": "includes",
+            "self": "https://jira.mariadb.org/rest/api/2/issueLinkType/10100"
+        },
+        "Problem/Incident": {
+            "id": "10500",
+            "name": "Problem/Incident",
+            "inward": "is caused by",
+            "outward": "causes",
+            "self": "https://jira.mariadb.org/rest/api/2/issueLinkType/10500"
+        },
+        "Relates": {
+            "id": "10003",
+            "name": "Relates",
+            "inward": "relates to",
+            "outward": "relates to",
+            "self": "https://jira.mariadb.org/rest/api/2/issueLinkType/10003"
+        }
+    },
+    "Mojang": {
+        "Blocks": {
+            "id": "10100",
+            "name": "Blocks",
+            "inward": "is blocked by",
+            "outward": "blocks",
+            "self": "https://bugs.mojang.com/rest/api/2/issueLinkType/10100"
+        },
+        "Bonfire Testing": {
+            "id": "10000",
+            "name": "Bonfire Testing",
+            "inward": "discovered while testing",
+            "outward": "testing discovered",
+            "self": "https://bugs.mojang.com/rest/api/2/issueLinkType/10000"
+        },
+        "Cloners": {
+            "id": "10101",
+            "name": "Cloners",
+            "inward": "is cloned by",
+            "outward": "clones",
+            "self": "https://bugs.mojang.com/rest/api/2/issueLinkType/10101"
+        },
+        "Duplicate": {
+            "id": "10102",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://bugs.mojang.com/rest/api/2/issueLinkType/10102"
+        },
+        "Problem/Incident": {
+            "id": "10500",
+            "name": "Problem/Incident",
+            "inward": "is caused by",
+            "outward": "causes",
+            "self": "https://bugs.mojang.com/rest/api/2/issueLinkType/10500"
+        },
+        "Relates": {
+            "id": "10103",
+            "name": "Relates",
+            "inward": "relates to",
+            "outward": "relates to",
+            "self": "https://bugs.mojang.com/rest/api/2/issueLinkType/10103"
+        }
+    },
+    "MongoDB": {
+        "Backports": {
+            "id": "10420",
+            "name": "Backports",
+            "inward": "backports",
+            "outward": "backported by",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10420"
+        },
+        "Cloners": {
+            "id": "10720",
+            "name": "Cloners",
+            "inward": "is cloned by",
+            "outward": "clones",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10720"
+        },
+        "Depends": {
+            "id": "10011",
+            "name": "Depends",
+            "inward": "is depended on by",
+            "outward": "depends on",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10011"
+        },
+        "Documented": {
+            "id": "10320",
+            "name": "Documented",
+            "inward": "is documented by",
+            "outward": "documents",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10320"
+        },
+        "Duplicate": {
+            "id": "10010",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10010"
+        },
+        "Gantt Dependency": {
+            "id": "10020",
+            "name": "Gantt Dependency",
+            "inward": "has to be done after",
+            "outward": "has to be done before",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10020"
+        },
+        "Gantt End to End": {
+            "id": "10423",
+            "name": "Gantt End to End",
+            "inward": "has to be finished together with",
+            "outward": "has to be finished together with",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10423"
+        },
+        "Gantt End to Start": {
+            "id": "10421",
+            "name": "Gantt End to Start",
+            "inward": "has to be done after",
+            "outward": "has to be done before",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10421"
+        },
+        "Gantt Start to End": {
+            "id": "10424",
+            "name": "Gantt Start to End",
+            "inward": "start is earliest end of",
+            "outward": "earliest end is start of",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10424"
+        },
+        "Gantt Start to Start": {
+            "id": "10422",
+            "name": "Gantt Start to Start",
+            "inward": "has to be started together with",
+            "outward": "has to be started together with",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10422"
+        },
+        "Initiative": {
+            "id": "10820",
+            "name": "Initiative",
+            "inward": "included in Initiative",
+            "outward": "includes Epic(s)",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10820"
+        },
+        "Issue split": {
+            "id": "10620",
+            "name": "Issue split",
+            "inward": "split from",
+            "outward": "split to",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10620"
+        },
+        "Problem/Incident": {
+            "id": "10520",
+            "name": "Problem/Incident",
+            "inward": "is caused by",
+            "outward": "causes",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10520"
+        },
+        "Related": {
+            "id": "10012",
+            "name": "Related",
+            "inward": "is related to",
+            "outward": "related to",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10012"
+        },
+        "Tested": {
+            "id": "10220",
+            "name": "Tested",
+            "inward": "is testing",
+            "outward": "tested by",
+            "self": "https://jira.mongodb.org/rest/api/2/issueLinkType/10220"
+        }
+    },
+    "Qt": {
+        "Blocks": {
+            "id": "10282",
+            "name": "Blocks",
+            "inward": "is blocked by",
+            "outward": "blocks",
+            "self": "https://bugreports.qt.io/rest/api/2/issueLinkType/10282"
+        },
+        "Cloners": {
+            "id": "10281",
+            "name": "Cloners",
+            "inward": "is cloned by",
+            "outward": "clones",
+            "self": "https://bugreports.qt.io/rest/api/2/issueLinkType/10281"
+        },
+        "Covered": {
+            "id": "10381",
+            "name": "Covered",
+            "inward": "is covered by",
+            "outward": "covers",
+            "self": "https://bugreports.qt.io/rest/api/2/issueLinkType/10381"
+        },
+        "Dependency": {
+            "id": "10001",
+            "name": "Dependency",
+            "inward": "is required for",
+            "outward": "depends on",
+            "self": "https://bugreports.qt.io/rest/api/2/issueLinkType/10001"
+        },
+        "Duplicate": {
+            "id": "10180",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://bugreports.qt.io/rest/api/2/issueLinkType/10180"
+        },
+        "Issue split": {
+            "id": "10280",
+            "name": "Issue split",
+            "inward": "split from",
+            "outward": "split to",
+            "self": "https://bugreports.qt.io/rest/api/2/issueLinkType/10280"
+        },
+        "Relates": {
+            "id": "10070",
+            "name": "Relates",
+            "inward": "relates to",
+            "outward": "relates to",
+            "self": "https://bugreports.qt.io/rest/api/2/issueLinkType/10070"
+        },
+        "Replacement": {
+            "id": "10031",
+            "name": "Replacement",
+            "inward": "replaces",
+            "outward": "is replaced by",
+            "self": "https://bugreports.qt.io/rest/api/2/issueLinkType/10031"
+        },
+        "Test": {
+            "id": "10020",
+            "name": "Test",
+            "inward": "Is tested by",
+            "outward": "tests",
+            "self": "https://bugreports.qt.io/rest/api/2/issueLinkType/10020"
+        },
+        "Work Breakdown": {
+            "id": "10040",
+            "name": "Work Breakdown",
+            "inward": "resulted from",
+            "outward": "resulted in",
+            "self": "https://bugreports.qt.io/rest/api/2/issueLinkType/10040"
+        }
+    },
+    "RedHat": {
+        "Account": {
+            "id": "12310920",
+            "name": "Account",
+            "inward": "account is impacted by",
+            "outward": "impacts account",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310920"
+        },
+        "Blocks": {
+            "id": "12310720",
+            "name": "Blocks",
+            "inward": "is blocked by",
+            "outward": "blocks",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310720"
+        },
+        "Causality": {
+            "id": "12310220",
+            "name": "Causality",
+            "inward": "is caused by",
+            "outward": "causes",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310220"
+        },
+        "Cloners": {
+            "id": "12310120",
+            "name": "Cloners",
+            "inward": "is cloned by",
+            "outward": "clones",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310120"
+        },
+        "Cloners (old)": {
+            "id": "12310010",
+            "name": "Cloners (old)",
+            "inward": "cloned from",
+            "outward": "cloned to",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310010"
+        },
+        "Documentation": {
+            "id": "12310420",
+            "name": "Documentation",
+            "inward": "is documented by",
+            "outward": "documents",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310420"
+        },
+        "Duplicate": {
+            "id": "12310000",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310000"
+        },
+        "finish-finish [GANTT]": {
+            "id": "12310725",
+            "name": "finish-finish [GANTT]",
+            "inward": "has to be finished together with",
+            "outward": "has to be finished together with",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310725"
+        },
+        "finish-start [GANTT]": {
+            "id": "12310726",
+            "name": "finish-start [GANTT]",
+            "inward": "has to be done after",
+            "outward": "has to be done before",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310726"
+        },
+        "Gantt: finish-finish": {
+            "id": "12310721",
+            "name": "Gantt: finish-finish",
+            "inward": "has to be finished together with",
+            "outward": "has to be finished together with",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310721"
+        },
+        "Gantt: finish-start": {
+            "id": "12310722",
+            "name": "Gantt: finish-start",
+            "inward": "has to be done after",
+            "outward": "has to be done before",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310722"
+        },
+        "Gantt: start-finish": {
+            "id": "12310723",
+            "name": "Gantt: start-finish",
+            "inward": "is triggered by",
+            "outward": "is triggering",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310723"
+        },
+        "Gantt: start-start": {
+            "id": "12310724",
+            "name": "Gantt: start-start",
+            "inward": "has to be started together with",
+            "outward": "has to be started together with",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310724"
+        },
+        "is-subtask-of": {
+            "id": "12311022",
+            "name": "is-subtask-of",
+            "inward": "is parent of",
+            "outward": "is subtask of",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12311022"
+        },
+        "Issue split": {
+            "id": "12310520",
+            "name": "Issue split",
+            "inward": "split from",
+            "outward": "split to",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310520"
+        },
+        "multi-level hierarchy [GANTT]": {
+            "id": "12310727",
+            "name": "multi-level hierarchy [GANTT]",
+            "inward": "is subtask of",
+            "outward": "is parent task of",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310727"
+        },
+        "Problem/Incident": {
+            "id": "12311020",
+            "name": "Problem/Incident",
+            "inward": "is caused by",
+            "outward": "causes",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12311020"
+        },
+        "Related": {
+            "id": "12310001",
+            "name": "Related",
+            "inward": "is related to",
+            "outward": "relates to",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310001"
+        },
+        "Relates": {
+            "id": "12311021",
+            "name": "Relates",
+            "inward": "relates to",
+            "outward": "relates to",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12311021"
+        },
+        "Sequence": {
+            "id": "12310221",
+            "name": "Sequence",
+            "inward": "is followed up by",
+            "outward": "follows up on",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310221"
+        },
+        "start-finish [GANTT]": {
+            "id": "12310728",
+            "name": "start-finish [GANTT]",
+            "inward": "start is earliest end of",
+            "outward": "earliest end is start of",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310728"
+        },
+        "start-start [GANTT]": {
+            "id": "12310729",
+            "name": "start-start [GANTT]",
+            "inward": "has to be started together with",
+            "outward": "has to be started together with",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/12310729"
+        },
+        "Superset": {
+            "id": "10011",
+            "name": "Superset",
+            "inward": "is incorporated by",
+            "outward": "incorporates",
+            "self": "https://issues.redhat.com/rest/api/2/issueLinkType/10011"
+        }
+    },
+    "Sakai": {
+        "1 - Relate": {
+            "id": "10008",
+            "name": "1 - Relate",
+            "inward": "is related to",
+            "outward": "relates to",
+            "self": "https://sakaiproject.atlassian.net/rest/api/2/issueLinkType/10008"
+        },
+        "2 - Cloned": {
+            "id": "10009",
+            "name": "2 - Cloned",
+            "inward": "cloned from",
+            "outward": "cloned as",
+            "self": "https://sakaiproject.atlassian.net/rest/api/2/issueLinkType/10009"
+        },
+        "3 - Duplicate": {
+            "id": "10002",
+            "name": "3 - Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://sakaiproject.atlassian.net/rest/api/2/issueLinkType/10002"
+        },
+        "4 - Incorporate": {
+            "id": "10006",
+            "name": "4 - Incorporate",
+            "inward": "is incorporated by",
+            "outward": "incorporates",
+            "self": "https://sakaiproject.atlassian.net/rest/api/2/issueLinkType/10006"
+        },
+        "5 - Depend": {
+            "id": "10007",
+            "name": "5 - Depend",
+            "inward": "depends on",
+            "outward": "is depended on by",
+            "self": "https://sakaiproject.atlassian.net/rest/api/2/issueLinkType/10007"
+        },
+        "6 - Blocks": {
+            "id": "10000",
+            "name": "6 - Blocks",
+            "inward": "is blocked by",
+            "outward": "blocks",
+            "self": "https://sakaiproject.atlassian.net/rest/api/2/issueLinkType/10000"
+        },
+        "7 - Git Code Review": {
+            "id": "10010",
+            "name": "7 - Git Code Review",
+            "inward": "opened during git code review in",
+            "outward": "git code review opened",
+            "self": "https://sakaiproject.atlassian.net/rest/api/2/issueLinkType/10010"
+        }
+    },
+    "SecondLife": {
+        "Blockers": {
+            "id": "10280",
+            "name": "Blockers",
+            "inward": "is blocked by",
+            "outward": "blocks",
+            "self": "https://jira.secondlife.com/rest/api/2/issueLinkType/10280"
+        },
+        "Cloners": {
+            "id": "10000",
+            "name": "Cloners",
+            "inward": "duplicates",
+            "outward": "duplicates",
+            "self": "https://jira.secondlife.com/rest/api/2/issueLinkType/10000"
+        },
+        "Collection": {
+            "id": "10080",
+            "name": "Collection",
+            "inward": "is included In",
+            "outward": "includes",
+            "self": "https://jira.secondlife.com/rest/api/2/issueLinkType/10080"
+        },
+        "Depends": {
+            "id": "10050",
+            "name": "Depends",
+            "inward": "is depended on by",
+            "outward": "depends on",
+            "self": "https://jira.secondlife.com/rest/api/2/issueLinkType/10050"
+        },
+        "Internal Sync": {
+            "id": "10070",
+            "name": "Internal Sync",
+            "inward": "internal",
+            "outward": "external",
+            "self": "https://jira.secondlife.com/rest/api/2/issueLinkType/10070"
+        },
+        "Issue split": {
+            "id": "10380",
+            "name": "Issue split",
+            "inward": "split from",
+            "outward": "split to",
+            "self": "https://jira.secondlife.com/rest/api/2/issueLinkType/10380"
+        },
+        "Parent/Child": {
+            "id": "10020",
+            "name": "Parent/Child",
+            "inward": "is a child of",
+            "outward": "is a parent of",
+            "self": "https://jira.secondlife.com/rest/api/2/issueLinkType/10020"
+        },
+        "Public to Internal Sync": {
+            "id": "10030",
+            "name": "Public to Internal Sync",
+            "inward": "is clone of",
+            "outward": "is original of",
+            "self": "https://jira.secondlife.com/rest/api/2/issueLinkType/10030"
+        },
+        "Relates": {
+            "id": "10001",
+            "name": "Relates",
+            "inward": "related",
+            "outward": "related",
+            "self": "https://jira.secondlife.com/rest/api/2/issueLinkType/10001"
+        }
+    },
+    "Sonatype": {
+        "Bonfire Testing": {
+            "id": "10030",
+            "name": "Bonfire Testing",
+            "inward": "discovered while testing",
+            "outward": "testing discovered",
+            "self": "https://issues.sonatype.org/rest/api/2/issueLinkType/10030"
+        },
+        "Caused": {
+            "id": "10014",
+            "name": "Caused",
+            "inward": "is caused by",
+            "outward": "causes",
+            "self": "https://issues.sonatype.org/rest/api/2/issueLinkType/10014"
+        },
+        "dependent": {
+            "id": "10010",
+            "name": "dependent",
+            "inward": "is depended on by",
+            "outward": "depends on",
+            "self": "https://issues.sonatype.org/rest/api/2/issueLinkType/10010"
+        },
+        "Duplicate": {
+            "id": "10011",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://issues.sonatype.org/rest/api/2/issueLinkType/10011"
+        },
+        "Fixes": {
+            "id": "10012",
+            "name": "Fixes",
+            "inward": "fixed by",
+            "outward": "fixes",
+            "self": "https://issues.sonatype.org/rest/api/2/issueLinkType/10012"
+        },
+        "Implements": {
+            "id": "10020",
+            "name": "Implements",
+            "inward": "is implemented by",
+            "outward": "implements",
+            "self": "https://issues.sonatype.org/rest/api/2/issueLinkType/10020"
+        },
+        "Issue split": {
+            "id": "10630",
+            "name": "Issue split",
+            "inward": "split from",
+            "outward": "split to",
+            "self": "https://issues.sonatype.org/rest/api/2/issueLinkType/10630"
+        },
+        "Relates": {
+            "id": "10015",
+            "name": "Relates",
+            "inward": "is related to",
+            "outward": "relates",
+            "self": "https://issues.sonatype.org/rest/api/2/issueLinkType/10015"
+        },
+        "Release Notable": {
+            "id": "10430",
+            "name": "Release Notable",
+            "inward": "is the release note for",
+            "outward": "is release noted by",
+            "self": "https://issues.sonatype.org/rest/api/2/issueLinkType/10430"
+        },
+        "Supercedes": {
+            "id": "10013",
+            "name": "Supercedes",
+            "inward": "is superceded by",
+            "outward": "supercedes",
+            "self": "https://issues.sonatype.org/rest/api/2/issueLinkType/10013"
+        }
+    },
+    "Spring": {
+        "Cloners": {
+            "id": "10140",
+            "name": "Cloners",
+            "inward": "Cloned to",
+            "outward": "Cloned from",
+            "self": "https://jira.spring.io/rest/api/2/issueLinkType/10140"
+        },
+        "Depend": {
+            "id": "10150",
+            "name": "Depend",
+            "inward": "is depended on by",
+            "outward": "depends on",
+            "self": "https://jira.spring.io/rest/api/2/issueLinkType/10150"
+        },
+        "Depends": {
+            "id": "10011",
+            "name": "Depends",
+            "inward": "is depended on by",
+            "outward": "depends on",
+            "self": "https://jira.spring.io/rest/api/2/issueLinkType/10011"
+        },
+        "Duplicate": {
+            "id": "10000",
+            "name": "Duplicate",
+            "inward": "is duplicated by",
+            "outward": "duplicates",
+            "self": "https://jira.spring.io/rest/api/2/issueLinkType/10000"
+        },
+        "Relate": {
+            "id": "10151",
+            "name": "Relate",
+            "inward": "is related to",
+            "outward": "relates to",
+            "self": "https://jira.spring.io/rest/api/2/issueLinkType/10151"
+        },
+        "Related": {
+            "id": "10020",
+            "name": "Related",
+            "inward": "is related to",
+            "outward": "is related to",
+            "self": "https://jira.spring.io/rest/api/2/issueLinkType/10020"
+        },
+        "Supersede": {
+            "id": "10130",
+            "name": "Supersede",
+            "inward": "is superseded by",
+            "outward": "supersedes",
+            "self": "https://jira.spring.io/rest/api/2/issueLinkType/10130"
+        }
+    }
+}

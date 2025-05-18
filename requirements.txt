@@ -1,0 +1,9 @@
+openai
+pymongo
+faiss-cpu
+python-dotenv
+sentence-transformers
+transformers
+google-generativeai
+# Add other libraries like openai if you plan to use their API
+# or specific libraries for your chosen local LLM

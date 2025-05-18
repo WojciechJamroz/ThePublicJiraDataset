@@ -1,0 +1,98 @@
+{
+  "Apache": {
+    "company_url": "https://apache.org/",
+    "jira_url": "https://issues.apache.org/jira",
+    "name": "Apache",
+    "rough_issue_count": "1,015,000"
+  },
+  "Hyperledger": {
+    "company_url": "https://hyperledger.org/about",
+    "jira_url": "https://jira.hyperledger.org",
+    "name": "Hyperledger",
+    "rough_issue_count": "28,000"
+  },
+  "IntelDAOS": {
+    "company_url": "https://wiki.hpdd.intel.com/display/DC/DAOS+Community+Home",
+    "jira_url": "https://jira.hpdd.intel.com",
+    "name": "IntelDAOS",
+    "rough_issue_count": "9,000"
+  },
+  "JFrog": {
+    "company_url": "https://jfrog.com/about/",
+    "jira_url": "https://jfrog.com/jira",
+    "name": "JFrog",
+    "rough_issue_count": "16,000"
+  },
+  "Jira": {
+    "company_url": "https://www.atlassian.com/company",
+    "jira_url": "https://jira.atlassian.com",
+    "name": "Jira",
+    "rough_issue_count": "275,000"
+  },
+  "JiraEcosystem": {
+    "company_url": "https://ecosystem.atlassian.net",
+    "jira_url": "https://ecosystem.atlassian.net",
+    "name": "JiraEcosystem",
+    "rough_issue_count": "42,000"
+  },
+  "MariaDB": {
+    "company_url": "https://mariadb.org/",
+    "jira_url": "https://jira.mariadb.org",
+    "name": "MariaDB",
+    "rough_issue_count": "30,000"
+  },
+  "Mindville": {
+    "company_url": "https://documentation.mindville.com",
+    "jira_url": "https://jira.mindville.com",
+    "name": "Mindville",
+    "rough_issue_count": "2,000"
+  },
+  "Mojang": {
+    "company_url": "https://mojang.com/",
+    "jira_url": "https://bugs.mojang.com",
+    "name": "Mojang",
+    "rough_issue_count": "421,000"
+  },
+  "MongoDB": {
+    "company_url": "https://mongodb.com",
+    "jira_url": "https://jira.mongodb.org",
+    "name": "MongoDB",
+    "rough_issue_count": "137,000"
+  },
+  "Qt": {
+    "company_url": "https://qt.io/company",
+    "jira_url": "https://bugreports.qt.io",
+    "name": "Qt",
+    "rough_issue_count": "147,000"
+  },
+  "RedHat": {
+    "company_url": "https://redhat.com/en/about/company",
+    "jira_url": "https://issues.redhat.com",
+    "name": "RedHat",
+    "rough_issue_count": "353,000"
+  },
+  "Sakai": {
+    "company_url": "https://sakailms.org/",
+    "jira_url": "https://jira.sakaiproject.org",
+    "name": "Sakai",
+    "rough_issue_count": "51,000"
+  },
+  "SecondLife": {
+    "company_url": "https://secondlife.com/",
+    "jira_url": "https://jira.secondlife.com",
+    "name": "SecondLife",
+    "rough_issue_count": "2,000"
+  },
+  "Sonatype": {
+    "company_url": "https://sonatype.com/about/",
+    "jira_url": "https://issues.sonatype.org",
+    "name": "Sonatype",
+    "rough_issue_count": "87,000"
+  },
+  "Spring": {
+    "company_url": "https://spring.io/",
+    "jira_url": "https://jira.spring.io",
+    "name": "Spring",
+    "rough_issue_count": "69,000"
+  }
+}
