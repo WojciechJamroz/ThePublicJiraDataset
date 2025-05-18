@@ -5,7 +5,7 @@ import re
 import os
 from src.config import GEMINI_API_KEY, GEMINI_MODEL_NAME
 import google.generativeai as genai
-from google.generativeai.generative_models import GenerativeModel, Part # For gemini_model type
+from google.generativeai.generative_models import GenerativeModel
 from sentence_transformers import SentenceTransformer # For embedding_model type
 import faiss # For index type
 from src.embed import load_embedding_model
@@ -19,6 +19,7 @@ from collections import Counter # Added for summary
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+from src.llm import LLMWrapper  # Add this import
 
 logging.basicConfig(level=logging.INFO)
 
@@ -28,26 +29,27 @@ OUTPUT_CSV_FILE: str = "rag_benchmark_results.csv" # Added CSV output file
 OUTPUT_CONFUSION_MATRIX_FILE: str = "confusion_matrix.png" # Added for plot
 PROMPTS_FILE: str = "rag_benchmark_prompts.jsonl"
 
-async def query_command(text: str, embedding_model: SentenceTransformer, index: faiss.Index, metadata: List[Dict[str, Any]], gemini_model: GenerativeModel) -> Optional[Tuple[str, str]]:
+async def query_command(text: str, embedding_model: SentenceTransformer, index: faiss.Index, metadata: List[Dict[str, Any]], llm: LLMWrapper) -> Optional[Tuple[str, str]]:
     # FAISS search (CPU-bound, kept synchronous for now, or could be run in executor)
     results: List[Dict[str, Any]] = search_faiss(text, embedding_model, index, metadata)
-    print(f"Top similar issues for query \\'{text}\\':")
+    print(f"Top similar issues for query '{text}':")
     for r in results:
         print(f"{r['issue_key']} (score={r['similarity']:.4f}): {r['text']} ({r['issuetype']})")
     
     prompt = generate_rag_prompt(text, results)
-    print("\\n=== RAG Prompt ===\\n")
+    print("\n=== RAG Prompt ===\n")
     print(prompt)
 
-    # Send prompt to Gemini API asynchronously
+    # Send prompt to LLM (Gemini or local)
     try:
-        resp = await gemini_model.generate_content_async(prompt) # Changed to async call
-        print("\\n=== Gemini API Response ===\\n")
-        print(resp.text)
-        return resp.text, prompt
+        # Use sync call for both Gemini and local for now
+        resp_text = llm.generate(prompt)
+        print("\n=== LLM Response ===\n")
+        print(resp_text)
+        return resp_text, prompt
     except Exception as e:
-        logging.error(f"Error calling Gemini API for query \\'{text}\\': {e}")
-        print(f"[Error] Could not get response from Gemini API for query \\'{text}\\'.\\nCheck your GEMINI_API_KEY and network connection.")
+        logging.error(f"Error calling LLM for query '{text}': {e}")
+        print(f"[Error] Could not get response from LLM for query '{text}'.\n{e}")
         return None
 
 def extract_issuetype_from_llm_output(llm_output: Optional[str]) -> str:
@@ -124,6 +126,11 @@ async def run_benchmark():
     genai.configure(api_key=GEMINI_API_KEY)
     gemini_model: GenerativeModel = genai.GenerativeModel(GEMINI_MODEL_NAME)
 
+    # LLM backend selection
+    llm_backend = os.getenv("LLM_BACKEND", "gemini")
+    local_model_name = os.getenv("LOCAL_MODEL_NAME", "Qwen/Qwen3-30B-A3B-FP8")
+    llm = LLMWrapper(backend=llm_backend, local_model_name=local_model_name)
+
     tasks: List[asyncio.Task] = []
     source_items: List[Dict[str, Any]] = [] # To store original items for later processing
 
@@ -133,8 +140,8 @@ async def run_benchmark():
             source_items.append(item)
             summary: str = item["summary"]
             # Create a task for each item
-            if embedding_model and index and metadata and gemini_model: # Ensure models are loaded
-                tasks.append(asyncio.create_task(query_command(summary, embedding_model, index, metadata, gemini_model)))
+            if embedding_model and index and metadata and llm: # Ensure models are loaded
+                tasks.append(asyncio.create_task(query_command(summary, embedding_model, index, metadata, llm)))
             else:
                 logging.error("A model or index is None, cannot create task.") # Should not happen if checks above pass
 

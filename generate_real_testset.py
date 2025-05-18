@@ -8,7 +8,7 @@ from typing import List, Dict, Any, Optional
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 OUTPUT_FILE: str = "real_data_rag_testset.jsonl"
-NUM_RECORDS_TO_FETCH: int = 1000
+NUM_RECORDS_TO_FETCH: int = 10
 SKIP_RECORDS: int = 900000
 
 def fetch_data_from_mongodb() -> Optional[List[Dict[str, Any]]]:

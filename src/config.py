@@ -32,3 +32,7 @@ except ValueError:
 
 # Determine device for embeddings and FAISS
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+# LLM backend selection
+LLM_BACKEND = os.getenv("LLM_BACKEND", "gemini")  # 'gemini' or 'local'
+LOCAL_MODEL_NAME = os.getenv("LOCAL_MODEL_NAME", "Qwen/Qwen3-30B-A3B-FP8")

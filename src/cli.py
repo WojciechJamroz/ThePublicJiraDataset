@@ -11,6 +11,7 @@ from .indexer import init_faiss_index, load_index_and_metadata, save_index_and_m
 from .search import search_faiss
 from .prompt import generate_rag_prompt
 import google.generativeai as genai  # add Gemini API client
+from .llm import LLMWrapper  # Add this import
 
 def index_command(args: Any) -> None:
     db = connect_to_db()
@@ -68,18 +69,17 @@ def query_command(args: Any) -> None:
         prompt = generate_rag_prompt(args.text, results)
         print("\n=== RAG Prompt ===\n")
         print(prompt)
-        # Send prompt to Gemini API
+        # Select LLM backend
+        backend = getattr(args, 'llm_backend', 'gemini')
+        local_model_name = getattr(args, 'local_model_name', None)
         try:
-            if not GEMINI_API_KEY:
-                raise ValueError("GEMINI_API_KEY not set in environment")
-            genai.configure(api_key=GEMINI_API_KEY)
-            gem_model = genai.GenerativeModel(GEMINI_MODEL_NAME)
-            resp = gem_model.generate_content(prompt)
-            print("\n=== Gemini API Response ===\n")
-            print(resp.text)
+            llm = LLMWrapper(backend=backend, local_model_name=local_model_name)
+            response = llm.generate(prompt)
+            print("\n=== LLM Response ===\n")
+            print(response)
         except Exception as e:
-            logging.error("Error calling Gemini API: %s", e)
-            print("[Error] Could not get response from Gemini API.\nCheck your GEMINI_API_KEY and network connection.")
+            logging.error("Error calling LLM: %s", e)
+            print(f"[Error] Could not get response from LLM.\n{e}")
 
 
 def main() -> None:
@@ -100,6 +100,8 @@ def main() -> None:
     p_query = sub.add_parser('query', help='Query similar issues')
     p_query.add_argument('--text', required=True, help='New ticket summary to query')
     p_query.add_argument('--rag', action='store_true', help='Also generate a RAG prompt')
+    p_query.add_argument('--llm-backend', choices=['gemini', 'local'], default='gemini', help='LLM backend to use (gemini or local)')
+    p_query.add_argument('--local-model-name', type=str, default=None, help='Local HuggingFace model name (if using --llm-backend local)')
     p_query.set_defaults(func=query_command)
 
     args = parser.parse_args()

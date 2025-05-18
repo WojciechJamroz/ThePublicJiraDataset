@@ -46,3 +46,21 @@ After running the benchmark, you can analyze the output files:
 *   **Detailed CSV/JSONL**: For a deep dive into individual errors or patterns, inspect `rag_benchmark_results.csv` or `rag_benchmark_results.jsonl`. This can help in understanding why certain predictions were incorrect by looking at the `llm_output` and the input `summary`/`description`.
 
 By regularly running the benchmark and analyzing its outputs, you can track the impact of changes to the embedding models, prompting strategies, or the LLM itself.
+
+## Local LLM Support
+
+You can now use a local Hugging Face LLM (such as Qwen3-30B-A3B-FP8) for RAG-augmented querying and benchmarking, in addition to Google Gemini. This is useful for running open-source models on your own hardware without relying on external APIs.
+
+- To use a local LLM for benchmarking, set the following environment variables before running the benchmark script:
+
+```powershell
+$env:LLM_BACKEND = "local"
+$env:LOCAL_MODEL_NAME = "Qwen/Qwen3-30B-A3B-FP8"
+python run_rag_benchmark.py
+```
+
+- To use Gemini, set `LLM_BACKEND` to `gemini` and ensure `GEMINI_API_KEY` is set.
+
+The script will automatically use the correct prompt formatting for chat-based models (using the tokenizer's chat template if available).
+
+See [USAGE.md](USAGE.md) for CLI usage and more details.

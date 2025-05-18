@@ -50,6 +50,11 @@ This document describes the high-level design and module breakdown of the Jira R
   - `confusion_matrix.png`: Visual confusion matrix.
 - Prints summary statistics (overall accuracy, per-type accuracy, text-based confusion matrix).
 
+### 10. LLM Abstraction (`src/llm.py`)
+- Provides a unified interface for calling either Google Gemini or a local Hugging Face LLM.
+- Uses chat template formatting for chat-based models (e.g., Qwen, Llama, Mistral) when available.
+- CLI and benchmarking scripts can select backend via CLI flags or environment variables.
+
 ## Workflows
 
 ### 1. Data Preparation (Optional)
@@ -74,5 +79,5 @@ This document describes the high-level design and module breakdown of the Jira R
 - Data: MongoDB
 - Embeddings: `sentence-transformers` (E5 models)
 - Indexing: FAISS
-- LLM calls: `google-generativeai` for Gemini
+- LLM calls: `google-generativeai` for Gemini, or `transformers` for local Hugging Face models (Qwen, Llama, etc.)
 

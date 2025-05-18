@@ -74,6 +74,35 @@ python main.py --debug index
 python main.py --debug query --text "Your new ticket summary here"
 ```
 
+## Using Local LLMs (Hugging Face Transformers)
+
+In addition to Google Gemini, you can use a local Large Language Model (LLM) via Hugging Face Transformers for RAG-augmented querying and benchmarking. This is useful for running open-source models like Qwen3-30B-A3B-FP8 or Llama 2/3 on your own hardware.
+
+### Querying with a Local LLM
+
+To use a local LLM instead of Gemini, add the `--llm-backend local` flag and specify the model name with `--local-model-name`:
+
+```powershell
+python main.py query --text "Your new ticket summary here" --rag --llm-backend local --local-model-name Qwen/Qwen3-30B-A3B-FP8
+```
+
+- The model will be loaded from Hugging Face Hub or your local cache.
+- The prompt will be formatted using the model's chat template if available (for best results with chat models).
+
+### Environment Variables for Benchmarking
+
+For the benchmark script (`run_rag_benchmark.py`), you can set the backend and model via environment variables:
+
+```powershell
+$env:LLM_BACKEND = "local"
+$env:LOCAL_MODEL_NAME = "Qwen/Qwen3-30B-A3B-FP8"
+python run_rag_benchmark.py
+```
+
+If you want to use Gemini, set `LLM_BACKEND` to `gemini` and ensure `GEMINI_API_KEY` is set.
+
+See the [INSTALL](INSTALL.md) and [BENCHMARKING](BENCHMARKING.md) docs for more details.
+
 ## Troubleshooting
 
 - If you encounter issues, check the logs for error messages.
