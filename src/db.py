@@ -32,7 +32,7 @@ def get_jira_issues(db, initial_skip=0, batch_size=None):
         cursor = collection.find(
             {},
             {"fields.summary": 1, "fields.description": 1, "key": 1, "fields.issuetype.name": 1, "_id": 0}
-        ).skip(skip).limit(batch_size)
+        ).sort("_id", 1).skip(skip).limit(batch_size)
         raw_batch = list(cursor)
         if not raw_batch:
             logger.info("No more issues to fetch. Total fetched: %d", total)
