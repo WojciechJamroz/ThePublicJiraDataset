@@ -1,5 +1,45 @@
-jira_embeddings.json
-jira_index.faiss
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
 .venv/
-.vscode/
+env/
+venv/
+ENV/
+
+# dotenv environment variables file
 .env
+
+# VSCode and IDE settings
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# FAISS index files and progress metadata
+jira_index.faiss
+jira_index_metadata.json
+jira_index_progress.json
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Coverage reports
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+
+# OS files
+.DS_Store
+Thumbs.db

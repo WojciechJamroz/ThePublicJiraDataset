@@ -5,5 +5,7 @@ python-dotenv
 sentence-transformers
 transformers
 google-generativeai
+numpy
+torch
 # Add other libraries like openai if you plan to use their API
 # or specific libraries for your chosen local LLM
