@@ -43,3 +43,6 @@ coverage.xml
 # OS files
 .DS_Store
 Thumbs.db
+*.png
+*rag*.json*
+rag*.csv
