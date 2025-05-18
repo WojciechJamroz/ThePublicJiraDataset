@@ -3,19 +3,21 @@ import pymongo
 from pymongo.errors import ConnectionFailure
 from src.config import MONGO_URI, DB_NAME, COLLECTION_NAME
 import logging
+from typing import List, Dict, Any, Optional
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-OUTPUT_FILE = "real_data_rag_testset.jsonl"
-NUM_RECORDS_TO_FETCH = 1000
-SKIP_RECORDS = 900000
+OUTPUT_FILE: str = "real_data_rag_testset.jsonl"
+NUM_RECORDS_TO_FETCH: int = 1000
+SKIP_RECORDS: int = 900000
 
-def fetch_data_from_mongodb():
+def fetch_data_from_mongodb() -> Optional[List[Dict[str, Any]]]:
     """
     Fetches data from MongoDB, skipping a specified number of records.
     Returns a list of dictionaries, each containing summary, description, and issuetype.
     """
-    records = []
+    records: List[Dict[str, Any]] = []
+    client: Optional[pymongo.MongoClient] = None
     try:
         client = pymongo.MongoClient(MONGO_URI)
         client.admin.command('ping') # Verify connection
@@ -26,7 +28,7 @@ def fetch_data_from_mongodb():
         # Fetch records, skip, limit, and project necessary fields
         # Sorting by _id to ensure consistent skip
         # Temporarily remove projection to inspect full document structure
-        cursor = collection.find(
+        cursor: pymongo.cursor.Cursor = collection.find(
             filter={},
             # projection={"summary": 1, "description": 1, "issuetype": 1, "_id": 0}, # Temporarily removed
             sort=[("_id", pymongo.ASCENDING)]
@@ -37,11 +39,11 @@ def fetch_data_from_mongodb():
             if doc_num % 50 == 0 and doc_num > 0:
                 logging.info(f"Fetched {doc_num} documents...")
             
-            fields = document.get("fields", {})
-            summary = fields.get("summary")
-            description = fields.get("description", "") # Handle missing descriptions
-            issuetype_field = fields.get("issuetype", {})
-            issuetype = issuetype_field.get("name") if issuetype_field else None
+            fields: Dict[str, Any] = document.get("fields", {})
+            summary: Optional[str] = fields.get("summary")
+            description: str = fields.get("description", "") # Handle missing descriptions
+            issuetype_field: Dict[str, Any] = fields.get("issuetype", {})
+            issuetype: Optional[str] = issuetype_field.get("name") if issuetype_field else None
 
             if summary and issuetype: # Ensure essential fields are present
                 records.append({
@@ -61,13 +63,13 @@ def fetch_data_from_mongodb():
         logging.error(f"An error occurred while fetching data: {e}")
         return None
     finally:
-        if 'client' in locals() and client:
+        if client:
             client.close()
             logging.info("MongoDB connection closed.")
             
     return records
 
-def save_to_jsonl(data: list, filename: str):
+def save_to_jsonl(data: List[Dict[str, Any]], filename: str) -> None:
     """
     Saves the list of records to a .jsonl file.
     """

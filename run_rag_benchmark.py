@@ -1,10 +1,13 @@
 import json
 from src.prompt import generate_rag_prompt
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple, Optional, Counter as TypingCounter # Renamed to avoid conflict
 import re
 import os
 from src.config import GEMINI_API_KEY, GEMINI_MODEL_NAME
 import google.generativeai as genai
+from google.generativeai.generative_models import GenerativeModel, Part # For gemini_model type
+from sentence_transformers import SentenceTransformer # For embedding_model type
+import faiss # For index type
 from src.embed import load_embedding_model
 from src.indexer import load_index_and_metadata
 from src.search import search_faiss
@@ -19,15 +22,15 @@ import numpy as np
 
 logging.basicConfig(level=logging.INFO)
 
-INPUT_FILE = "real_data_rag_testset.jsonl"
-OUTPUT_JSONL_FILE = "rag_benchmark_results.jsonl" # Renamed for clarity
-OUTPUT_CSV_FILE = "rag_benchmark_results.csv" # Added CSV output file
-OUTPUT_CONFUSION_MATRIX_FILE = "confusion_matrix.png" # Added for plot
-PROMPTS_FILE = "rag_benchmark_prompts.jsonl"
+INPUT_FILE: str = "real_data_rag_testset.jsonl"
+OUTPUT_JSONL_FILE: str = "rag_benchmark_results.jsonl" # Renamed for clarity
+OUTPUT_CSV_FILE: str = "rag_benchmark_results.csv" # Added CSV output file
+OUTPUT_CONFUSION_MATRIX_FILE: str = "confusion_matrix.png" # Added for plot
+PROMPTS_FILE: str = "rag_benchmark_prompts.jsonl"
 
-async def query_command(text: str, embedding_model, index, metadata, gemini_model) -> tuple[str, str] | None:
+async def query_command(text: str, embedding_model: SentenceTransformer, index: faiss.Index, metadata: List[Dict[str, Any]], gemini_model: GenerativeModel) -> Optional[Tuple[str, str]]:
     # FAISS search (CPU-bound, kept synchronous for now, or could be run in executor)
-    results = search_faiss(text, embedding_model, index, metadata)
+    results: List[Dict[str, Any]] = search_faiss(text, embedding_model, index, metadata)
     print(f"Top similar issues for query \\'{text}\\':")
     for r in results:
         print(f"{r['issue_key']} (score={r['similarity']:.4f}): {r['text']} ({r['issuetype']})")
@@ -47,7 +50,7 @@ async def query_command(text: str, embedding_model, index, metadata, gemini_mode
         print(f"[Error] Could not get response from Gemini API for query \\'{text}\\'.\\nCheck your GEMINI_API_KEY and network connection.")
         return None
 
-def extract_issuetype_from_llm_output(llm_output: str) -> str:
+def extract_issuetype_from_llm_output(llm_output: Optional[str]) -> str:
     if not llm_output or not llm_output.strip():
         return "Unknown"
     for line in llm_output.splitlines():
@@ -60,12 +63,12 @@ def extract_issuetype_from_llm_output(llm_output: str) -> str:
     return "Unknown"
 
 
-def plot_confusion_matrix(confusion_matrix_data, all_types, output_filename):
+def plot_confusion_matrix(confusion_matrix_data: TypingCounter[Tuple[str, str]], all_types: List[str], output_filename: str) -> None:
     """Generates and saves a confusion matrix plot."""
-    matrix_size = len(all_types)
-    matrix = np.zeros((matrix_size, matrix_size), dtype=int)
+    matrix_size: int = len(all_types)
+    matrix: np.ndarray = np.zeros((matrix_size, matrix_size), dtype=int)
 
-    type_to_index = {t: i for i, t in enumerate(all_types)}
+    type_to_index: Dict[str, int] = {t: i for i, t in enumerate(all_types)}
 
     for (expected, predicted), count in confusion_matrix_data.items():
         if expected in type_to_index and predicted in type_to_index:
@@ -88,75 +91,86 @@ def plot_confusion_matrix(confusion_matrix_data, all_types, output_filename):
         logging.error(f"Error saving confusion matrix plot: {e}")
 
 async def run_benchmark():
-    correct = 0
-    total = 0
-    benchmark_results = [] # Renamed from results to avoid conflict
-    generated_prompts = [] # Renamed from prompts
+    correct: int = 0
+    total: int = 0
+    benchmark_results: List[Dict[str, Any]] = [] # Renamed from results to avoid conflict
+    generated_prompts: List[str] = [] # Renamed from prompts
     
     # For detailed summary
-    expected_counts = Counter()
-    correct_by_type = Counter()
-    predicted_by_type = Counter()
-    confusion_matrix = Counter()
+    expected_counts: TypingCounter[str] = Counter()
+    correct_by_type: TypingCounter[str] = Counter()
+    predicted_by_type: TypingCounter[str] = Counter()
+    confusion_matrix: TypingCounter[Tuple[str, str]] = Counter()
 
 
     print(f"Running RAG benchmark on {INPUT_FILE}...\n")
 
     # Load models and index once
-    index, metadata = load_index_and_metadata(use_gpu=(DEVICE=='cuda'))
+    index_data: Tuple[Optional[faiss.Index], List[Dict[str, Any]]] = load_index_and_metadata(use_gpu=(DEVICE=='cuda'))
+    index: Optional[faiss.Index] = index_data[0]
+    metadata: List[Dict[str, Any]] = index_data[1]
+
     if index is None or not metadata:
         logging.error("Index not initialized. Please run 'index' first.")
         return
 
-    embedding_model, _ = load_embedding_model(device=DEVICE)
+    embedding_model_data: Tuple[SentenceTransformer, Any] = load_embedding_model(device=DEVICE) # Assuming second part is tokenizer or similar, type Any for now
+    embedding_model: SentenceTransformer = embedding_model_data[0]
     
     if not GEMINI_API_KEY:
         logging.error("GEMINI_API_KEY not set in environment")
         print("[Error] GEMINI_API_KEY not set. Cannot run benchmark.")
         return
     genai.configure(api_key=GEMINI_API_KEY)
-    gemini_model = genai.GenerativeModel(GEMINI_MODEL_NAME)
+    gemini_model: GenerativeModel = genai.GenerativeModel(GEMINI_MODEL_NAME)
 
-    tasks = []
-    source_items = [] # To store original items for later processing
+    tasks: List[asyncio.Task] = []
+    source_items: List[Dict[str, Any]] = [] # To store original items for later processing
 
     with open(INPUT_FILE, "r", encoding="utf-8") as f:
         for line in f:
-            item = json.loads(line)
+            item: Dict[str, Any] = json.loads(line)
             source_items.append(item)
-            summary = item["summary"]
+            summary: str = item["summary"]
             # Create a task for each item
-            tasks.append(query_command(summary, embedding_model, index, metadata, gemini_model))
+            if embedding_model and index and metadata and gemini_model: # Ensure models are loaded
+                tasks.append(asyncio.create_task(query_command(summary, embedding_model, index, metadata, gemini_model)))
+            else:
+                logging.error("A model or index is None, cannot create task.") # Should not happen if checks above pass
 
     if not tasks:
         print("No items to benchmark.")
         return
         
     # Run all tasks concurrently
-    llm_query_results = await asyncio.gather(*tasks)
+    llm_query_results: List[Optional[Tuple[str, str]]] = await asyncio.gather(*tasks)
 
     for idx, llm_result_tuple in enumerate(llm_query_results):
         item = source_items[idx]
         summary = item["summary"]
-        description = item.get("description", "")
-        expected = item["expected_issuetype"]
+        description: str = item.get("description", "")
+        expected: str = item["expected_issuetype"]
         
-        current_test_idx = idx + 1 # For 1-based indexing in logs
+        current_test_idx: int = idx + 1 # For 1-based indexing in logs
 
         print(f"[Test {current_test_idx}] Summary: {summary}")
         print(f"[Test {current_test_idx}] Description: {description}")
         print(f"[Test {current_test_idx}] Expected: {expected}")
 
         expected_counts[expected] += 1 # Count expected types
+        
+        llm_output_text: str
+        prompt_text: Optional[str] = None # Initialize prompt_text
 
         if llm_result_tuple is None:
             print(f"[Test {current_test_idx}] LLM query failed. Skipping.")
-            predicted_issuetype = "ERROR_QUERY_FAILED"
+            predicted_issuetype: str = "ERROR_QUERY_FAILED"
             llm_output_text = "ERROR: Query command failed or returned None"
-            is_correct = False
+            is_correct: bool = False
         else:
             llm_output_text, prompt_text = llm_result_tuple
-            generated_prompts.append(prompt_text)
+            if prompt_text: # Ensure prompt_text is not None before appending
+                generated_prompts.append(prompt_text)
             print(f"[Test {current_test_idx}] LLM Output: {llm_output_text}")
             predicted_issuetype = extract_issuetype_from_llm_output(llm_output_text)
             print(f"[Test {current_test_idx}] Predicted: {predicted_issuetype}")
@@ -180,7 +194,7 @@ async def run_benchmark():
             correct_by_type[expected] += 1 # Count correct by type
         total += 1
             
-    accuracy = correct / total if total else 0.0
+    accuracy: float = correct / total if total else 0.0
     
     # Save to JSONL file
     with open(OUTPUT_JSONL_FILE, "w", encoding="utf-8") as out: # Updated filename
@@ -189,9 +203,9 @@ async def run_benchmark():
 
     # Save to CSV file
     if benchmark_results:
-        keys = benchmark_results[0].keys()
+        keys: List[str] = list(benchmark_results[0].keys())
         with open(OUTPUT_CSV_FILE, "w", encoding="utf-8", newline="") as out_csv: # Added CSV writer
-            writer = csv.DictWriter(out_csv, fieldnames=keys)
+            writer: csv.DictWriter = csv.DictWriter(out_csv, fieldnames=keys)
             writer.writeheader()
             writer.writerows(benchmark_results)
         print(f"Results also saved to {OUTPUT_CSV_FILE}")
@@ -206,19 +220,19 @@ async def run_benchmark():
     print(f"Prompts saved to {PROMPTS_FILE}")
 
     print("\n--- Accuracy by Issue Type ---")
-    sorted_expected_types = sorted(expected_counts.keys())
+    sorted_expected_types: List[str] = sorted(expected_counts.keys())
     for issue_type in sorted_expected_types:
-        count = expected_counts[issue_type]
-        correct_count = correct_by_type[issue_type]
-        type_accuracy = correct_count / count if count else 0.0
+        count: int = expected_counts[issue_type]
+        correct_count: int = correct_by_type[issue_type]
+        type_accuracy: float = correct_count / count if count else 0.0
         print(f"  {issue_type}: {type_accuracy:.2%} ({correct_count}/{count})")
 
     print("\n--- Confusion Matrix (Expected -> Predicted) ---")
     # Collect all unique types for header/row labels
-    all_types = sorted(list(set(expected_counts.keys()) | set(predicted_by_type.keys())))
+    all_types: List[str] = sorted(list(set(expected_counts.keys()) | set(predicted_by_type.keys())))
     
     # Print header
-    header = "Expected \\ Predicted | " + " | ".join(f"{t[:10]:<10}" for t in all_types) # Truncate long names
+    header: str = "Expected \\ Predicted | " + " | ".join(f"{t[:10]:<10}" for t in all_types) # Truncate long names
     print(header)
     print("-" * len(header))
 
